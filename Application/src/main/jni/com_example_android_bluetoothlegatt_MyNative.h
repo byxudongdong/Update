@@ -34,10 +34,10 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_update_
 /*
  * Class:     com_example_android_bluetoothlegatt_MyNative
  * Method:    wavemake
- * Signature: ()I
+ * Signature: ([B)I
  */
 JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_wavemake
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jbyteArray);
 
 #ifdef __cplusplus
 }

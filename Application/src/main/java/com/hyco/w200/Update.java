@@ -14,6 +14,7 @@ import com.example.android.bluetoothlegatt.MyNative;
 import com.example.android.bluetoothlegatt.tUpdate_info;
 import com.hyco.w200.R;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -58,14 +59,23 @@ public class Update extends Activity {
                 Update_info.image_size,
                 Update_info.image_crc,
                 Update_info.image_data);
+        byte[] write_bytes = new byte[FilesOpt.byteArrayToInt(Update_info.image_size)];
+        System.arraycopy(Update_info.image_data,0,write_bytes,0,FilesOpt.byteArrayToInt(Update_info.image_size));
 
-        myNative.wavemake();
+        try {
+            FilesOpt.writeBytesSdcardFile( FilesOpt.getSdCardPath() + "/image_W200.bin", write_bytes);
+        } catch (IOException e) {
+            Log.i("解读文件失败","解读文件失败");
+            e.printStackTrace();
+        }
+
+        myNative.wavemake(write_bytes);
 
     }
 
     String newtime;
     FilesOpt filesOpt = new FilesOpt();
-    public int imageIndex = 0,imageNum=0 ,update_step=0;
+    public int imageIndex = 1,imageNum=0 ,update_step=0;
     FileInputStream fin = null;
     tUpdate_info Update_info = new tUpdate_info();
     Boolean updateFlag = false;
@@ -108,6 +118,7 @@ public class Update extends Activity {
                         Update_info.image_size,
                         Update_info.image_crc,
                         Update_info.image_data);
+
 //                while (updateFlag)
 //                {
 //                    //发送唤醒

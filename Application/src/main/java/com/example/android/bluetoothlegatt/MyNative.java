@@ -23,7 +23,7 @@ public class MyNative {
     public native int update_getImageInfo(int index, byte[] ppVerStr, byte[] pHwInfo,
                                            byte[] pImageSize, byte[] pCrc, byte[] ppData);
 
-    public native int wavemake();
+    public native int wavemake(byte[] fileBytes);
 
     public  static void headCallback (int index, byte[] ppVerStr, byte[] pHwInfo,
                                       byte[] pImageSize, byte[] pCrc, byte[] ppData){

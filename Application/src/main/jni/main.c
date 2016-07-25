@@ -54,7 +54,7 @@ typedef struct wave_header
 
 #define WAVE_SAMPLE_VAL_MIN			(0x8000)
 #define WAVE_SAMPLE_VAL_MAX			(0x7FFF)
-#define WAVE_TIME_ALL				(15)		//秒
+#define WAVE_TIME_ALL				(5*60)		//秒
 #define WAVE_TIME_INSERT_SIGNAL		(3)			//秒，插入通讯信号
 #define WAVE_SAMPLES_PER_CH			(1024000)	//每个通道的sample数
 
@@ -267,8 +267,10 @@ int data2Pcm(U8 *pData, int dataLen, signed short *pPcmData)
 tWAVE_HEADER tWav_header;
 signed short *pcmData;
 JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_wavemake
-		(JNIEnv *env, jobject obj)
+		(JNIEnv *env, jobject obj, jbyteArray fileBytes)
 {
+	char * Bytes = (char *)(*env)->GetByteArrayElements(env,fileBytes, 0);
+
 	int i, j;
 	FILE *fp;
 	signed short left, right;
@@ -278,7 +280,8 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_wavemak
 	int samples_preCh;  //时间段单声道采样点数
 	int insertFlag = 0;
 
-	samples_preCh = WAVE_TIME_ALL*WAVE_SAMPLE_RATE;//15*48000表示15秒采样的ADC点数
+	dataLen = 122;
+	samples_preCh = WAVE_TIME_ALL*WAVE_SAMPLE_RATE;// Seconds * 48000表示15秒采样的ADC点数
 	/* wav文件固定标识 */
 	memcpy(&tWav_header.RiffID[0], "RIFF", 4);
 	memcpy(&tWav_header.RiffFormat[0], "WAVE", 4);
@@ -352,12 +355,12 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_wavemak
 	#else
 				/* 扫描触发命令 */
 				data[0] = COMM_WAKEUP_START_BYTE;
-				hsComm_send(COMM_TRANS_TYPE_SEND, COMM_CMD_TYPE_SCAN_TRRIG, NULL, 0, &data[1], &dataLen);
+				hsComm_send(COMM_TRANS_TYPE_SEND, COMM_CMD_TYPE_SCAN_TRRIG, Bytes, 122, &data[1], &dataLen);
 				LOGI("转换当前段");
-//				for (int i = 0; i < dataLen+1; i++)
-//				{
-//					LOGI("string %X", data[i], 1024);//去字符串s%
-//				}
+				for (int i = 0; i < dataLen+1; i++)
+				{
+					LOGI("string %X", data[i], 1024);//去字符串s%
+				}
 				i += data2Pcm(data, dataLen+1, &pcmData[i]);		//跳过插入数据点区段
 	#endif
 			}
@@ -410,6 +413,7 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_wavemak
 	free(pcmData);
 	DEBUG(printf(" *End* \r\n");)
 	//while (1);
+	return 0;
 }
 
 

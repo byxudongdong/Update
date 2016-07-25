@@ -97,6 +97,27 @@ public class FilesOpt {
         }
     }
 
+    //写数据到SD中的文件
+    public static void writeBytesSdcardFile(String filePath,byte[] write_bytes) throws IOException{
+        try{
+            File file = new File(filePath);
+            if(file.exists()) file.delete();
+            if (!file.exists()) {
+                Log.d("TestFile", "Create the file:" + filePath);
+                file.createNewFile();
+            }
+
+            FileOutputStream fout = new FileOutputStream(filePath);
+
+            fout.write(write_bytes);
+            fout.close();
+        }
+
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     //读SD中的文件
     public static byte[] readFileSdcardFile(String fileName) throws IOException{
