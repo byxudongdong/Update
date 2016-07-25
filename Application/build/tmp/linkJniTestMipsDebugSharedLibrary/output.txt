@@ -1,0 +1,4 @@
+See file:///H:/NewProj/W200Update/Application/build/tmp/linkJniTestMipsDebugSharedLibrary/output.txt for all output for linkJniTestMipsDebugSharedLibrary.
+linking libJniTest.so successful.
+
+Finished linkJniTestMipsDebugSharedLibrary, see full log file:///H:/NewProj/W200Update/Application/build/tmp/linkJniTestMipsDebugSharedLibrary/output.txt.

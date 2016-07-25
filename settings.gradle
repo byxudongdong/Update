@@ -1,0 +1,2 @@
+include 'Application'
+"android.useDeprecatedNdk=true"

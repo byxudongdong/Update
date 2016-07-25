@@ -1,0 +1,16 @@
+See file:///H:/NewProj/W200Update/Application/build/tmp/compileJniTestMipsDebugSharedLibraryJniTestMainC/output.txt for all output for compileJniTestMipsDebugSharedLibraryJniTestMainC.
+compiling main.c successful.
+clang.exe: warning: optimization flag '-finline-functions' is not supported
+clang.exe: warning: argument unused during compilation: '-finline-functions'
+H:\NewProj\W200Update\Application\src\main\jni\main.c:405:34: warning: data argument not used by format string [-Wformat-extra-args]
+                        LOGI("string %X", pcmData[i], 1024);//去字符串s%
+                             ~~~~~~~~~~~              ^
+H:\NewProj\W200Update\Application\src\main\jni\main.c:15:66: note: expanded from macro 'LOGI'
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
+                                                                 ^
+H:\NewProj\W200Update\Application\src\main\jni\main.c:413:1: warning: control may reach end of non-void function [-Wreturn-type]
+}
+^
+2 warnings generated.
+
+Finished compileJniTestMipsDebugSharedLibraryJniTestMainC, see full log file:///H:/NewProj/W200Update/Application/build/tmp/compileJniTestMipsDebugSharedLibraryJniTestMainC/output.txt.

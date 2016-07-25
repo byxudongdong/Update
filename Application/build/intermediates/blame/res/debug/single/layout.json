@@ -1,0 +1,34 @@
+[
+    {
+        "merged": "H:\\NewProj\\W200Update\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\listitemidex_device.xml",
+        "source": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\layout\\listitemidex_device.xml"
+    },
+    {
+        "merged": "H:\\NewProj\\W200Update\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\actionbar_indeterminate_progress.xml",
+        "source": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\layout\\actionbar_indeterminate_progress.xml"
+    },
+    {
+        "merged": "H:\\NewProj\\W200Update\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\bluetooth_search_activity.xml",
+        "source": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\layout\\bluetooth_search_activity.xml"
+    },
+    {
+        "merged": "H:\\NewProj\\W200Update\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\bluetooth_scan_activity.xml",
+        "source": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\layout\\bluetooth_scan_activity.xml"
+    },
+    {
+        "merged": "H:\\NewProj\\W200Update\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\gatt_services_characteristics.xml",
+        "source": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\layout\\gatt_services_characteristics.xml"
+    },
+    {
+        "merged": "H:\\NewProj\\W200Update\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\activity_update.xml",
+        "source": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\layout\\activity_update.xml"
+    },
+    {
+        "merged": "H:\\NewProj\\W200Update\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\listitemchild_device.xml",
+        "source": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\layout\\listitemchild_device.xml"
+    },
+    {
+        "merged": "H:\\NewProj\\W200Update\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\listitem_device.xml",
+        "source": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\layout\\listitem_device.xml"
+    }
+]

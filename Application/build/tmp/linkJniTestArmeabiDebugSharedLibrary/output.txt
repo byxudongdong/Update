@@ -1,0 +1,4 @@
+See file:///H:/NewProj/W200Update/Application/build/tmp/linkJniTestArmeabiDebugSharedLibrary/output.txt for all output for linkJniTestArmeabiDebugSharedLibrary.
+linking libJniTest.so successful.
+
+Finished linkJniTestArmeabiDebugSharedLibrary, see full log file:///H:/NewProj/W200Update/Application/build/tmp/linkJniTestArmeabiDebugSharedLibrary/output.txt.

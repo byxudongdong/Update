@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "H:\\NewProj\\W200Update\\Application\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\single_select.xml",
+        "source": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\drawable-mdpi\\single_select.xml"
+    },
+    {
+        "merged": "H:\\NewProj\\W200Update\\Application\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\edittext_select.xml",
+        "source": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\drawable-mdpi\\edittext_select.xml"
+    },
+    {
+        "merged": "H:\\NewProj\\W200Update\\Application\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\single_layout_selector.xml",
+        "source": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\drawable-mdpi\\single_layout_selector.xml"
+    },
+    {
+        "merged": "H:\\NewProj\\W200Update\\Application\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\single_shutdown_select.xml",
+        "source": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\drawable-mdpi\\single_shutdown_select.xml"
+    },
+    {
+        "merged": "H:\\NewProj\\W200Update\\Application\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\ic_launcher.png",
+        "source": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\drawable-mdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "H:\\NewProj\\W200Update\\Application\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\edittext_unselect.xml",
+        "source": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\drawable-mdpi\\edittext_unselect.xml"
+    }
+]
