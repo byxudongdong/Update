@@ -16,6 +16,10 @@
         "source": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\layout\\bluetooth_scan_activity.xml"
     },
     {
+        "merged": "H:\\NewProj\\W200Update\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\recordtest.xml",
+        "source": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\layout\\recordtest.xml"
+    },
+    {
         "merged": "H:\\NewProj\\W200Update\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\gatt_services_characteristics.xml",
         "source": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\layout\\gatt_services_characteristics.xml"
     },

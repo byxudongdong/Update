@@ -25,13 +25,7 @@ public class MyNative {
 
     public native int wavemake(byte[] fileBytes);
 
-    public  static void headCallback (int index, byte[] ppVerStr, byte[] pHwInfo,
-                                      byte[] pImageSize, byte[] pCrc, byte[] ppData){
-
-        System.out.println("相加的结果为"+ (index));
-
-    }
-
-
+    public native static int audioInterface(int sample_rate, int data_rate,int reversePolarity);
+    public native static int cToJava(byte[] adc_value,int adc_value_length, byte[] code_data);
 
 }

@@ -123,7 +123,6 @@ public class UpdateOpt {
         }
     }
 
-
     //读SD中的文件
     public static byte[] readFileSdcardFile(String fileName) throws IOException{
         String res="";
@@ -158,7 +157,6 @@ public class UpdateOpt {
         return sdpath;
 
     }
-
 
     /**
      * 判断SDCard是否存在 [当没有外挂SD卡时，内置ROM也被识别为存在sd卡]

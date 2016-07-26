@@ -4,6 +4,10 @@
         "source": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\menu\\main.xml"
     },
     {
+        "merged": "H:\\NewProj\\W200Update\\Application\\build\\intermediates\\res\\merged\\debug\\menu\\recordtest.xml",
+        "source": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\menu\\recordtest.xml"
+    },
+    {
         "merged": "H:\\NewProj\\W200Update\\Application\\build\\intermediates\\res\\merged\\debug\\menu\\gatt_services.xml",
         "source": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\menu\\gatt_services.xml"
     }

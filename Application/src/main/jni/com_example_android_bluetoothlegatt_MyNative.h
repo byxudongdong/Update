@@ -39,6 +39,22 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_update_
 JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_wavemake
   (JNIEnv *, jobject, jbyteArray);
 
+/*
+ * Class:     com_example_android_bluetoothlegatt_MyNative
+ * Method:    audioInterface
+ * Signature: (III)I
+ */
+JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_audioInterface
+  (JNIEnv *, jclass, jint, jint, jint);
+
+/*
+ * Class:     com_example_android_bluetoothlegatt_MyNative
+ * Method:    cToJava
+ * Signature: ([BI[B)I
+ */
+JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_cToJava
+  (JNIEnv *, jclass, jbyteArray, jint, jbyteArray);
+
 #ifdef __cplusplus
 }
 #endif

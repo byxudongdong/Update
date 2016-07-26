@@ -881,9 +881,85 @@
                     "startLine": 48,
                     "startColumn": 4,
                     "startOffset": 2388,
-                    "endLine": 57,
+                    "endColumn": 58,
+                    "endOffset": 2442
+                },
+                "from": {
+                    "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\strings.xml",
+                    "position": {
+                        "startLine": 53,
+                        "startColumn": 4,
+                        "startOffset": 2396,
+                        "endColumn": 58,
+                        "endOffset": 2450
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 49,
+                    "startColumn": 4,
+                    "startOffset": 2447,
+                    "endColumn": 59,
+                    "endOffset": 2502
+                },
+                "from": {
+                    "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\strings.xml",
+                    "position": {
+                        "startLine": 54,
+                        "startColumn": 4,
+                        "startOffset": 2455,
+                        "endColumn": 59,
+                        "endOffset": 2510
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 50,
+                    "startColumn": 4,
+                    "startOffset": 2507,
+                    "endColumn": 49,
+                    "endOffset": 2552
+                },
+                "from": {
+                    "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\strings.xml",
+                    "position": {
+                        "startLine": 55,
+                        "startColumn": 4,
+                        "startOffset": 2515,
+                        "endColumn": 49,
+                        "endOffset": 2560
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 51,
+                    "startColumn": 4,
+                    "startOffset": 2557,
+                    "endColumn": 60,
+                    "endOffset": 2613
+                },
+                "from": {
+                    "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\strings.xml",
+                    "position": {
+                        "startLine": 48,
+                        "startColumn": 4,
+                        "startOffset": 2137,
+                        "endColumn": 60,
+                        "endOffset": 2193
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 52,
+                    "startColumn": 4,
+                    "startOffset": 2618,
+                    "endLine": 61,
                     "endColumn": 13,
-                    "endOffset": 2647
+                    "endOffset": 2877
                 },
                 "from": {
                     "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\base-strings.xml",
@@ -899,11 +975,11 @@
             },
             {
                 "to": {
-                    "startLine": 58,
+                    "startLine": 62,
                     "startColumn": 4,
-                    "startOffset": 2652,
+                    "startOffset": 2882,
                     "endColumn": 44,
-                    "endOffset": 2692
+                    "endOffset": 2922
                 },
                 "from": {
                     "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\strings.xml",
@@ -918,11 +994,11 @@
             },
             {
                 "to": {
-                    "startLine": 59,
+                    "startLine": 63,
                     "startColumn": 4,
-                    "startOffset": 2697,
+                    "startOffset": 2927,
                     "endColumn": 64,
-                    "endOffset": 2757
+                    "endOffset": 2987
                 },
                 "from": {
                     "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\strings.xml",
@@ -937,11 +1013,11 @@
             },
             {
                 "to": {
-                    "startLine": 60,
+                    "startLine": 64,
                     "startColumn": 4,
-                    "startOffset": 2762,
+                    "startOffset": 2992,
                     "endColumn": 46,
-                    "endOffset": 2804
+                    "endOffset": 3034
                 },
                 "from": {
                     "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\strings.xml",
@@ -956,11 +1032,11 @@
             },
             {
                 "to": {
-                    "startLine": 61,
+                    "startLine": 65,
                     "startColumn": 4,
-                    "startOffset": 2809,
+                    "startOffset": 3039,
                     "endColumn": 48,
-                    "endOffset": 2853
+                    "endOffset": 3083
                 },
                 "from": {
                     "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\strings.xml",
@@ -975,11 +1051,11 @@
             },
             {
                 "to": {
-                    "startLine": 62,
+                    "startLine": 66,
                     "startColumn": 4,
-                    "startOffset": 2858,
+                    "startOffset": 3088,
                     "endColumn": 54,
-                    "endOffset": 2908
+                    "endOffset": 3138
                 },
                 "from": {
                     "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\strings.xml",
@@ -994,11 +1070,11 @@
             },
             {
                 "to": {
-                    "startLine": 63,
+                    "startLine": 67,
                     "startColumn": 4,
-                    "startOffset": 2913,
+                    "startOffset": 3143,
                     "endColumn": 67,
-                    "endOffset": 2976
+                    "endOffset": 3206
                 },
                 "from": {
                     "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\strings.xml",
@@ -1013,11 +1089,11 @@
             },
             {
                 "to": {
-                    "startLine": 64,
+                    "startLine": 68,
                     "startColumn": 4,
-                    "startOffset": 2981,
+                    "startOffset": 3211,
                     "endColumn": 42,
-                    "endOffset": 3019
+                    "endOffset": 3249
                 },
                 "from": {
                     "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\strings.xml",
@@ -1032,11 +1108,30 @@
             },
             {
                 "to": {
-                    "startLine": 65,
+                    "startLine": 69,
                     "startColumn": 4,
-                    "startOffset": 3024,
+                    "startOffset": 3254,
+                    "endColumn": 50,
+                    "endOffset": 3300
+                },
+                "from": {
+                    "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\strings.xml",
+                    "position": {
+                        "startLine": 49,
+                        "startColumn": 4,
+                        "startOffset": 2198,
+                        "endColumn": 50,
+                        "endOffset": 2244
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 70,
+                    "startColumn": 4,
+                    "startOffset": 3305,
                     "endColumn": 42,
-                    "endOffset": 3062
+                    "endOffset": 3343
                 },
                 "from": {
                     "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\strings.xml",
@@ -1051,11 +1146,11 @@
             },
             {
                 "to": {
-                    "startLine": 66,
+                    "startLine": 71,
                     "startColumn": 4,
-                    "startOffset": 3067,
+                    "startOffset": 3348,
                     "endColumn": 43,
-                    "endOffset": 3106
+                    "endOffset": 3387
                 },
                 "from": {
                     "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\strings.xml",
@@ -1070,11 +1165,11 @@
             },
             {
                 "to": {
-                    "startLine": 67,
+                    "startLine": 72,
                     "startColumn": 4,
-                    "startOffset": 3111,
+                    "startOffset": 3392,
                     "endColumn": 57,
-                    "endOffset": 3164
+                    "endOffset": 3445
                 },
                 "from": {
                     "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\strings.xml",
@@ -1089,11 +1184,11 @@
             },
             {
                 "to": {
-                    "startLine": 68,
+                    "startLine": 73,
                     "startColumn": 4,
-                    "startOffset": 3169,
+                    "startOffset": 3450,
                     "endColumn": 73,
-                    "endOffset": 3238
+                    "endOffset": 3519
                 },
                 "from": {
                     "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\strings.xml",
@@ -1108,11 +1203,11 @@
             },
             {
                 "to": {
-                    "startLine": 69,
+                    "startLine": 74,
                     "startColumn": 4,
-                    "startOffset": 3243,
+                    "startOffset": 3524,
                     "endColumn": 57,
-                    "endOffset": 3296
+                    "endOffset": 3577
                 },
                 "from": {
                     "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\strings.xml",
@@ -1127,11 +1222,11 @@
             },
             {
                 "to": {
-                    "startLine": 70,
+                    "startLine": 75,
                     "startColumn": 4,
-                    "startOffset": 3301,
+                    "startOffset": 3582,
                     "endColumn": 59,
-                    "endOffset": 3356
+                    "endOffset": 3637
                 },
                 "from": {
                     "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\strings.xml",
@@ -1146,11 +1241,68 @@
             },
             {
                 "to": {
-                    "startLine": 71,
+                    "startLine": 76,
                     "startColumn": 4,
-                    "startOffset": 3361,
+                    "startOffset": 3642,
+                    "endColumn": 51,
+                    "endOffset": 3689
+                },
+                "from": {
+                    "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\strings.xml",
+                    "position": {
+                        "startLine": 51,
+                        "startColumn": 4,
+                        "startOffset": 2301,
+                        "endColumn": 51,
+                        "endOffset": 2348
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 77,
+                    "startColumn": 4,
+                    "startOffset": 3694,
+                    "endColumn": 51,
+                    "endOffset": 3741
+                },
+                "from": {
+                    "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\strings.xml",
+                    "position": {
+                        "startLine": 50,
+                        "startColumn": 4,
+                        "startOffset": 2249,
+                        "endColumn": 51,
+                        "endOffset": 2296
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 78,
+                    "startColumn": 4,
+                    "startOffset": 3746,
+                    "endColumn": 42,
+                    "endOffset": 3784
+                },
+                "from": {
+                    "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\strings.xml",
+                    "position": {
+                        "startLine": 52,
+                        "startColumn": 4,
+                        "startOffset": 2353,
+                        "endColumn": 42,
+                        "endOffset": 2391
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 79,
+                    "startColumn": 4,
+                    "startOffset": 3789,
                     "endColumn": 50,
-                    "endOffset": 3407
+                    "endOffset": 3835
                 },
                 "from": {
                     "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\template-styles.xml",
@@ -1165,11 +1317,11 @@
             },
             {
                 "to": {
-                    "startLine": 72,
+                    "startLine": 80,
                     "startColumn": 4,
-                    "startOffset": 3412,
+                    "startOffset": 3840,
                     "endColumn": 59,
-                    "endOffset": 3467
+                    "endOffset": 3895
                 },
                 "from": {
                     "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\template-styles.xml",
@@ -1184,11 +1336,11 @@
             },
             {
                 "to": {
-                    "startLine": 73,
+                    "startLine": 81,
                     "startColumn": 4,
-                    "startOffset": 3472,
+                    "startOffset": 3900,
                     "endColumn": 52,
-                    "endOffset": 3520
+                    "endOffset": 3948
                 },
                 "from": {
                     "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\template-styles.xml",
@@ -1203,11 +1355,11 @@
             },
             {
                 "to": {
-                    "startLine": 74,
+                    "startLine": 82,
                     "startColumn": 4,
-                    "startOffset": 3525,
+                    "startOffset": 3953,
                     "endColumn": 26,
-                    "endOffset": 3547
+                    "endOffset": 3975
                 },
                 "from": {
                     "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\template-styles.xml",
@@ -1222,12 +1374,12 @@
             },
             {
                 "to": {
-                    "startLine": 75,
+                    "startLine": 83,
                     "startColumn": 4,
-                    "startOffset": 3552,
-                    "endLine": 78,
+                    "startOffset": 3980,
+                    "endLine": 86,
                     "endColumn": 12,
-                    "endOffset": 3743
+                    "endOffset": 4171
                 },
                 "from": {
                     "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\template-styles.xml",
@@ -1243,12 +1395,12 @@
             },
             {
                 "to": {
-                    "startLine": 79,
+                    "startLine": 87,
                     "startColumn": 4,
-                    "startOffset": 3748,
-                    "endLine": 84,
+                    "startOffset": 4176,
+                    "endLine": 92,
                     "endColumn": 12,
-                    "endOffset": 4021
+                    "endOffset": 4449
                 },
                 "from": {
                     "file": "H:\\NewProj\\W200Update\\Application\\src\\main\\res\\values\\template-styles.xml",

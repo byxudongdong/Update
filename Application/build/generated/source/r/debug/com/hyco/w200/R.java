@@ -63,6 +63,9 @@ public final class R {
     }
     public static final class id {
         public static final int bluetooth_list_scan=0x7f090002;
+        public static final int btn_record_amr=0x7f090015;
+        public static final int btn_record_wav=0x7f090014;
+        public static final int btn_stop=0x7f090016;
         public static final int connection_state=0x7f09000d;
         public static final int data_value=0x7f09000e;
         public static final int device_address=0x7f09000c;
@@ -70,11 +73,11 @@ public final class R {
         public static final int dialog_progress_line=0x7f090004;
         public static final int gatt_services_list=0x7f090012;
         public static final int lanya_shezhi=0x7f090007;
-        public static final int menu_connect=0x7f090015;
-        public static final int menu_disconnect=0x7f090016;
-        public static final int menu_refresh=0x7f090014;
-        public static final int menu_scan=0x7f090017;
-        public static final int menu_stop=0x7f090018;
+        public static final int menu_connect=0x7f090019;
+        public static final int menu_disconnect=0x7f09001a;
+        public static final int menu_refresh=0x7f090018;
+        public static final int menu_scan=0x7f09001b;
+        public static final int menu_stop=0x7f09001c;
         public static final int peidui_text=0x7f090008;
         public static final int pgsBar=0x7f090000;
         public static final int scan_connection_device=0x7f09000a;
@@ -84,6 +87,7 @@ public final class R {
         public static final int sercice_dialog_progress=0x7f090005;
         public static final int services_list=0x7f090003;
         public static final int startButton=0x7f090001;
+        public static final int text=0x7f090017;
         public static final int textView=0x7f090011;
         public static final int updateButton=0x7f090010;
         public static final int updateState=0x7f09000f;
@@ -97,10 +101,12 @@ public final class R {
         public static final int listitem_device=0x7f030005;
         public static final int listitemchild_device=0x7f030006;
         public static final int listitemidex_device=0x7f030007;
+        public static final int recordtest=0x7f030008;
     }
     public static final class menu {
         public static final int gatt_services=0x7f080000;
         public static final int main=0x7f080001;
+        public static final int recordtest=0x7f080002;
     }
     public static final class string {
         public static final int SERVICES_COVERED=0x7f070000;
@@ -116,20 +122,28 @@ public final class R {
         public static final int connected=0x7f07000a;
         public static final int disconnected=0x7f07000b;
         public static final int error_bluetooth_not_supported=0x7f07000c;
-        public static final int intro_message=0x7f07000d;
-        public static final int label_data=0x7f07000e;
-        public static final int label_device_address=0x7f07000f;
-        public static final int label_state=0x7f070010;
-        public static final int menu_connect=0x7f070011;
-        public static final int menu_disconnect=0x7f070012;
-        public static final int menu_disconnect_new=0x7f070013;
-        public static final int menu_scan=0x7f070014;
-        public static final int menu_stop=0x7f070015;
-        public static final int no_data=0x7f070016;
-        public static final int title_devices=0x7f070017;
-        public static final int unknown_characteristic=0x7f070018;
-        public static final int unknown_device=0x7f070019;
-        public static final int unknown_service=0x7f07001a;
+        public static final int error_no_sdcard=0x7f07000d;
+        public static final int error_state_record=0x7f07000e;
+        public static final int error_unknown=0x7f07000f;
+        public static final int hello_world=0x7f070010;
+        public static final int intro_message=0x7f070011;
+        public static final int label_data=0x7f070012;
+        public static final int label_device_address=0x7f070013;
+        public static final int label_state=0x7f070014;
+        public static final int menu_connect=0x7f070015;
+        public static final int menu_disconnect=0x7f070016;
+        public static final int menu_disconnect_new=0x7f070017;
+        public static final int menu_scan=0x7f070018;
+        public static final int menu_settings=0x7f070019;
+        public static final int menu_stop=0x7f07001a;
+        public static final int no_data=0x7f07001b;
+        public static final int title_devices=0x7f07001c;
+        public static final int unknown_characteristic=0x7f07001d;
+        public static final int unknown_device=0x7f07001e;
+        public static final int unknown_service=0x7f07001f;
+        public static final int view_record_amr=0x7f070020;
+        public static final int view_record_wav=0x7f070021;
+        public static final int view_stop=0x7f070022;
     }
     public static final class style {
         public static final int AppTheme=0x7f050002;
