@@ -1,17 +1,23 @@
 See file:///H:/NewProj/W200Update/Application/build/tmp/compileJniTestArmeabi-v7aDebugSharedLibraryJniTestMainC/output.txt for all output for compileJniTestArmeabi-v7aDebugSharedLibraryJniTestMainC.
 compiling main.c successful.
-H:\NewProj\W200Update\Application\src\main\jni\main.c:358:65: warning: passing 'char *' to parameter of type 'U8 *' (aka 'unsigned char *') converts between pointers to integer types with different sign [-Wpointer-sign]
-                                hsComm_send(COMM_TRANS_TYPE_SEND, COMM_CMD_TYPE_SCAN_TRRIG, Bytes, 122, &data[1], &dataLen);
+H:\NewProj\W200Update\Application\src\main\jni\main.c:357:65: warning: passing 'char *' to parameter of type 'U8 *' (aka 'unsigned char *') converts between pointers to integer types with different sign [-Wpointer-sign]
+                                hsComm_send(COMM_TRANS_TYPE_SEND, COMM_CMD_TYPE_SCAN_TRRIG, Bytes, 120, &data[1], &dataLen);
                                                                                             ^~~~~
 H:\NewProj\W200Update\Application\src\main\jni\main.c:110:43: note: passing argument to parameter 'pData' here
 int hsComm_send(U8 transType, U8 cmd, U8 *pData, int len, U8 *cmdData, int *pCmdLen)
                                           ^
-H:\NewProj\W200Update\Application\src\main\jni\main.c:362:33: warning: data argument not used by format string [-Wformat-extra-args]
-                                        LOGI("string %X", data[i], 1024);//去字符串s%
-                                             ~~~~~~~~~~~           ^
-H:\NewProj\W200Update\Application\src\main\jni\main.c:15:66: note: expanded from macro 'LOGI'
-#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
-                                                                 ^
-2 warnings generated.
+H:\NewProj\W200Update\Application\src\main\jni\main.c:368:63: warning: passing 'char *' to parameter of type 'U8 *' (aka 'unsigned char *') converts between pointers to integer types with different sign [-Wpointer-sign]
+                                                hsComm_send(COMM_TRANS_TYPE_SEND, COMM_CMD_TYPE_UPDATE, &Bytes[count], 120, &data[0], &dataLen);
+                                                                                                        ^~~~~~~~~~~~~
+H:\NewProj\W200Update\Application\src\main\jni\main.c:110:43: note: passing argument to parameter 'pData' here
+int hsComm_send(U8 transType, U8 cmd, U8 *pData, int len, U8 *cmdData, int *pCmdLen)
+                                          ^
+H:\NewProj\W200Update\Application\src\main\jni\main.c:370:63: warning: passing 'char *' to parameter of type 'U8 *' (aka 'unsigned char *') converts between pointers to integer types with different sign [-Wpointer-sign]
+                                                hsComm_send(COMM_TRANS_TYPE_SEND, COMM_CMD_TYPE_UPDATE, &Bytes[count], fileDataBytes - count, &data[0], &dataLen);
+                                                                                                        ^~~~~~~~~~~~~
+H:\NewProj\W200Update\Application\src\main\jni\main.c:110:43: note: passing argument to parameter 'pData' here
+int hsComm_send(U8 transType, U8 cmd, U8 *pData, int len, U8 *cmdData, int *pCmdLen)
+                                          ^
+3 warnings generated.
 
 Finished compileJniTestArmeabi-v7aDebugSharedLibraryJniTestMainC, see full log file:///H:/NewProj/W200Update/Application/build/tmp/compileJniTestArmeabi-v7aDebugSharedLibraryJniTestMainC/output.txt.

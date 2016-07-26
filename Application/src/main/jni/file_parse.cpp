@@ -42,6 +42,7 @@ typedef struct _r11_update
 } tR11_UPDATE;
 
 tR11_UPDATE r11_updateImage[FILE_NUM_MAX];
+int fileDataBytes = 0;
 int validImageNum;
 
 int update_flag = 1;
@@ -308,6 +309,7 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_update_
 	{
 		LOGI("2，pImageSize");
 		memcpy(pImageSize,(char*)&r11_updateImage[index].header.imageSize, 4);
+		memcpy(&fileDataBytes,(char*)&r11_updateImage[index].header.imageSize, 4);
 	}
 	if (pCrc != NULL)
 	{

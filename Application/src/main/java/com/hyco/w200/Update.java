@@ -69,7 +69,12 @@ public class Update extends Activity {
             e.printStackTrace();
         }
 
-        myNative.wavemake(write_bytes);
+        FileToCRCUtil.main( FilesOpt.getSdCardPath() + "/image_W200.bin");
+
+        //AES.main(new String[1]);
+
+
+        //myNative.wavemake(write_bytes);
 
     }
 
