@@ -23,6 +23,8 @@ import com.hyco.w200.R;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class Update extends Activity {
@@ -126,7 +128,7 @@ public class Update extends Activity {
         {
             //读SD中的文件
             try{
-                String filePath = filesOpt.getSdCardPath() + "/image_W16_15_20160606_c.hyc";
+                String filePath = filesOpt.getSdCardPath() + "/image_w200_20160726.hyc";
                 try {
                     imageNum = myNative.update_fileParse(filePath.getBytes());
                 }catch (Exception  e) {
@@ -164,7 +166,7 @@ public class Update extends Activity {
                         Log.i("唤醒设备：", "wait...");
                         WriteComm( bytes, bytes.length);
                         try {
-                            Thread.sleep(2);
+                            Thread.sleep(100);
                         } catch (InterruptedException e) {
                             Log.i("等待延时：", "wait...");
                         }
@@ -199,9 +201,80 @@ public class Update extends Activity {
     int WriteComm(byte[] bytes,int length){
         int wavelen =0;
         byte[] wavedata = new byte[48000*2];
-        myNative.wavemake(bytes,length,wavedata,wavelen);
+        int count = myNative.wavemake(bytes,length,wavedata,wavelen);
+//        writeDateTOFile(wavedata);//往文件中写入裸数据
+//        copyWaveFile(AudioName, NewAudioName);//给裸数据加上头文件
+//        Log.i("生成WAV","生成WAV");
         start_scan(wavedata);
         return 0;
+    }
+
+    //AudioName裸音频数据文件
+    private static final String AudioName = "/sdcard/temp.raw";
+    //NewAudioName可播放的音频文件
+    private static final String NewAudioName = "/sdcard/new.wav";
+    /**
+     * 这里将数据写入文件，但是并不能播放，因为AudioRecord获得的音频是原始的裸音频，
+     * 如果需要播放就必须加入一些格式或者编码的头信息。但是这样的好处就是你可以对音频的 裸数据进行处理，比如你要做一个爱说话的TOM
+     * 猫在这里就进行音频的处理，然后重新封装 所以说这样得到的音频比较容易做一些音频的处理。
+     */
+    private void writeDateTOFile(byte[] data) {
+        // new一个byte数组用来存一些字节数据，大小为缓冲区大小
+        byte[] audiodata = new byte[48000*2];
+        FileOutputStream fos = null;
+        int readsize = 0;
+        try {
+            File file = new File(AudioName);
+            if (file.exists()) {
+                file.delete();
+            }
+            fos = new FileOutputStream(file);// 建立一个可存取字节的文件
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (true) {
+                try {
+                    fos.write(data);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+        }
+        try {
+            fos.close();// 关闭写入流
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    int sampleRateInHz = 44100;
+    // 这里得到可播放的音频文件
+    private void copyWaveFile(String inFilename, String outFilename) {
+        FileInputStream in = null;
+        FileOutputStream out = null;
+        long totalAudioLen = 0;
+        long totalDataLen = totalAudioLen + 36;
+        long longSampleRate = sampleRateInHz;
+        int channels = 2;
+        long byteRate = 16 * sampleRateInHz * channels / 8;
+        byte[] data = new byte[48000*2];
+        try {
+            in = new FileInputStream(inFilename);
+            out = new FileOutputStream(outFilename);
+            totalAudioLen = in.getChannel().size();
+            totalDataLen = totalAudioLen + 36;
+            WriteWaveFileHeader(out, totalAudioLen, totalDataLen,
+                    longSampleRate, channels, byteRate);
+            while (in.read(data) != -1) {
+                out.write(data);
+            }
+            in.close();
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     int update_Switch(){
@@ -217,7 +290,7 @@ public class Update extends Activity {
             {
                 update_sendUpdateReq();
                 try {
-                    Thread.currentThread().sleep(2);
+                    Thread.currentThread().sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -246,7 +319,7 @@ public class Update extends Activity {
                 break;
             case UPDATE_STEP_WAIT_REQUEST_RES:
                 consumingTime = System.currentTimeMillis();
-                if ((consumingTime - startTime) >= 5000)
+                if ((consumingTime - startTime) >= 1500)
                 {
 			        /* 超时重发 */
                     Log.i("发送升级请求：", "超时重发");
@@ -438,7 +511,10 @@ public class Update extends Activity {
         }
         temp[len+4] = (byte)sum;
         //Log.i("调用特征值写：", "wait...");
-        WriteComm( temp, len+6);
+        byte[] temp1 = new byte[ len+7];
+        temp1[0] = 0x11;
+        System.arraycopy(temp,0,temp1,1,len+6);
+        WriteComm( temp1, len+7);
 
         return true;
     }
@@ -676,7 +752,6 @@ public class Update extends Activity {
         try {
             trackplayer.write(byte_damo, 0, byte_damo.length);// 往track中写数据
         } catch (Exception e) {
-            Log.e("缓存播放失败","缓存播放失败");
             PlayAudioThread.interrupt();
         }
 
@@ -733,8 +808,7 @@ public class Update extends Activity {
     private byte[] code_data;
     private String code_msg = "";
     public void simple_c2java(byte[] byte_source) {
-        //code_data = new byte[320];
-        code_data = new byte[800];
+        code_data = new byte[320];
         s = myNative.cToJava(byte_source, byte_source.length, code_data);
         if (s > 0) {
             byte[] send_data = new byte[s];
@@ -793,5 +867,62 @@ public class Update extends Activity {
             }
         }
         return "";
+    }
+
+    /**
+     * 这里提供一个头信息。插入这些信息就可以得到可以播放的文件。
+     * 为我为啥插入这44个字节，这个还真没深入研究，不过你随便打开一个wav
+     * 音频的文件，可以发现前面的头文件可以说基本一样哦。每种格式的文件都有
+     * 自己特有的头文件。
+     */
+    private void WriteWaveFileHeader(FileOutputStream out, long totalAudioLen,
+                                     long totalDataLen, long longSampleRate, int channels, long byteRate)
+            throws IOException {
+        byte[] header = new byte[44];
+        header[0] = 'R'; // RIFF/WAVE header
+        header[1] = 'I';
+        header[2] = 'F';
+        header[3] = 'F';
+        header[4] = (byte) (totalDataLen & 0xff);
+        header[5] = (byte) ((totalDataLen >> 8) & 0xff);
+        header[6] = (byte) ((totalDataLen >> 16) & 0xff);
+        header[7] = (byte) ((totalDataLen >> 24) & 0xff);
+        header[8] = 'W';
+        header[9] = 'A';
+        header[10] = 'V';
+        header[11] = 'E';
+        header[12] = 'f'; // 'fmt ' chunk
+        header[13] = 'm';
+        header[14] = 't';
+        header[15] = ' ';
+        header[16] = 16; // 4 bytes: size of 'fmt ' chunk
+        header[17] = 0;
+        header[18] = 0;
+        header[19] = 0;
+        header[20] = 1; // format = 1
+        header[21] = 0;
+        header[22] = (byte) channels;
+        header[23] = 0;
+        header[24] = (byte) (longSampleRate & 0xff);
+        header[25] = (byte) ((longSampleRate >> 8) & 0xff);
+        header[26] = (byte) ((longSampleRate >> 16) & 0xff);
+        header[27] = (byte) ((longSampleRate >> 24) & 0xff);
+        header[28] = (byte) (byteRate & 0xff);
+        header[29] = (byte) ((byteRate >> 8) & 0xff);
+        header[30] = (byte) ((byteRate >> 16) & 0xff);
+        header[31] = (byte) ((byteRate >> 24) & 0xff);
+        header[32] = (byte) (2 * 16 / 8); // block align
+        header[33] = 0;
+        header[34] = 16; // bits per sample
+        header[35] = 0;
+        header[36] = 'd';
+        header[37] = 'a';
+        header[38] = 't';
+        header[39] = 'a';
+        header[40] = (byte) (totalAudioLen & 0xff);
+        header[41] = (byte) ((totalAudioLen >> 8) & 0xff);
+        header[42] = (byte) ((totalAudioLen >> 16) & 0xff);
+        header[43] = (byte) ((totalAudioLen >> 24) & 0xff);
+        out.write(header, 0, 44);
     }
 }

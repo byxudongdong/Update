@@ -3,6 +3,10 @@ compiling aesEnDecode.cpp successful.
 clang++.exe: warning: optimization flag '-finline-functions' is not supported
 clang++.exe: warning: argument unused during compilation: '-finline-functions'
 
+compiling comm.cpp successful.
+clang++.exe: warning: optimization flag '-finline-functions' is not supported
+clang++.exe: warning: argument unused during compilation: '-finline-functions'
+
 compiling MediaRecorderTest.cpp successful.
 clang++.exe: warning: optimization flag '-finline-functions' is not supported
 clang++.exe: warning: argument unused during compilation: '-finline-functions'
@@ -11,7 +15,7 @@ H:\NewProj\W200Update\Application\src\main\jni\MediaRecorderTest.cpp:39:1: warni
 ^
 1 warning generated.
 
-compiling comm.cpp successful.
+compiling AESENC.cpp successful.
 clang++.exe: warning: optimization flag '-finline-functions' is not supported
 clang++.exe: warning: argument unused during compilation: '-finline-functions'
 
@@ -22,10 +26,6 @@ H:\NewProj\W200Update\Application\src\main\jni\file_parse.cpp:335:20: warning: c
         char* classname = "com/example/android/bluetoothlegatt/MyNative";
                           ^
 1 warning generated.
-
-compiling AESENC.cpp successful.
-clang++.exe: warning: optimization flag '-finline-functions' is not supported
-clang++.exe: warning: argument unused during compilation: '-finline-functions'
 
 compiling AES.cpp successful.
 clang++.exe: warning: optimization flag '-finline-functions' is not supported

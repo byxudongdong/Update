@@ -1,21 +1,21 @@
 See file:///H:/NewProj/W200Update/Application/build/tmp/compileJniTestArmeabiDebugSharedLibraryJniTestMainCpp/output.txt for all output for compileJniTestArmeabiDebugSharedLibraryJniTestMainCpp.
 compiling aesEnDecode.cpp successful.
 
-compiling comm.cpp successful.
-
 compiling MediaRecorderTest.cpp successful.
 H:\NewProj\W200Update\Application\src\main\jni\MediaRecorderTest.cpp:39:1: warning: control reaches end of non-void function [-Wreturn-type]
 }
 ^
 1 warning generated.
 
-compiling AESENC.cpp successful.
+compiling comm.cpp successful.
 
 compiling file_parse.cpp successful.
 H:\NewProj\W200Update\Application\src\main\jni\file_parse.cpp:335:20: warning: conversion from string literal to 'char *' is deprecated [-Wc++11-compat-deprecated-writable-strings]
         char* classname = "com/example/android/bluetoothlegatt/MyNative";
                           ^
 1 warning generated.
+
+compiling AESENC.cpp successful.
 
 compiling AES.cpp successful.
 
