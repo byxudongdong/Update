@@ -2,24 +2,24 @@ See file:///H:/NewProj/W200Update/Application/build/tmp/compileJniTestMipsDebugS
 compiling main.c successful.
 clang.exe: warning: optimization flag '-finline-functions' is not supported
 clang.exe: warning: argument unused during compilation: '-finline-functions'
-H:\NewProj\W200Update\Application\src\main\jni\main.c:357:65: warning: passing 'char *' to parameter of type 'U8 *' (aka 'unsigned char *') converts between pointers to integer types with different sign [-Wpointer-sign]
-                                hsComm_send(COMM_TRANS_TYPE_SEND, COMM_CMD_TYPE_SCAN_TRRIG, Bytes, 120, &data[1], &dataLen);
-                                                                                            ^~~~~
-H:\NewProj\W200Update\Application\src\main\jni\main.c:110:43: note: passing argument to parameter 'pData' here
-int hsComm_send(U8 transType, U8 cmd, U8 *pData, int len, U8 *cmdData, int *pCmdLen)
-                                          ^
-H:\NewProj\W200Update\Application\src\main\jni\main.c:368:63: warning: passing 'char *' to parameter of type 'U8 *' (aka 'unsigned char *') converts between pointers to integer types with different sign [-Wpointer-sign]
-                                                hsComm_send(COMM_TRANS_TYPE_SEND, COMM_CMD_TYPE_UPDATE, &Bytes[count], 120, &data[0], &dataLen);
-                                                                                                        ^~~~~~~~~~~~~
-H:\NewProj\W200Update\Application\src\main\jni\main.c:110:43: note: passing argument to parameter 'pData' here
-int hsComm_send(U8 transType, U8 cmd, U8 *pData, int len, U8 *cmdData, int *pCmdLen)
-                                          ^
-H:\NewProj\W200Update\Application\src\main\jni\main.c:370:63: warning: passing 'char *' to parameter of type 'U8 *' (aka 'unsigned char *') converts between pointers to integer types with different sign [-Wpointer-sign]
-                                                hsComm_send(COMM_TRANS_TYPE_SEND, COMM_CMD_TYPE_UPDATE, &Bytes[count], fileDataBytes - count, &data[0], &dataLen);
-                                                                                                        ^~~~~~~~~~~~~
-H:\NewProj\W200Update\Application\src\main\jni\main.c:110:43: note: passing argument to parameter 'pData' here
-int hsComm_send(U8 transType, U8 cmd, U8 *pData, int len, U8 *cmdData, int *pCmdLen)
-                                          ^
-3 warnings generated.
+H:\NewProj\W200Update\Application\src\main\jni\main.c:361:33: warning: data argument not used by format string [-Wformat-extra-args]
+                                        LOGI("string %X", data[i], 1024);//去字符串s%
+                                             ~~~~~~~~~~~           ^
+H:\NewProj\W200Update\Application\src\main\jni\main.c:15:66: note: expanded from macro 'LOGI'
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
+                                                                 ^
+H:\NewProj\W200Update\Application\src\main\jni\main.c:399:51: warning: passing 'char *' to parameter of type 'jbyte *' (aka 'signed char *') converts between pointers to integer types with different sign [-Wpointer-sign]
+        (*env)->ReleaseByteArrayElements(env, fileBytes, Bytes, JNI_COMMIT);
+                                                         ^~~~~
+H:\NewProj\W200Update\Application\src\main\jni\main.c:400:50: warning: passing 'char *' to parameter of type 'jbyte *' (aka 'signed char *') converts between pointers to integer types with different sign [-Wpointer-sign]
+        (*env)->ReleaseByteArrayElements(env, wavedata, wave, JNI_COMMIT);
+                                                        ^~~~
+H:\NewProj\W200Update\Application\src\main\jni\main.c:432:51: warning: passing 'char *' to parameter of type 'jbyte *' (aka 'signed char *') converts between pointers to integer types with different sign [-Wpointer-sign]
+        (*env)->ReleaseByteArrayElements(env, fileBytes, Bytes, 0);
+                                                         ^~~~~
+H:\NewProj\W200Update\Application\src\main\jni\main.c:433:50: warning: passing 'char *' to parameter of type 'jbyte *' (aka 'signed char *') converts between pointers to integer types with different sign [-Wpointer-sign]
+        (*env)->ReleaseByteArrayElements(env, wavedata, wave, 0);
+                                                        ^~~~
+5 warnings generated.
 
 Finished compileJniTestMipsDebugSharedLibraryJniTestMainC, see full log file:///H:/NewProj/W200Update/Application/build/tmp/compileJniTestMipsDebugSharedLibraryJniTestMainC/output.txt.

@@ -12,7 +12,24 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:weightSum="1">
+        <LinearLayout android:orientation="horizontal"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_margin="0dp">
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="@string/label_data"
+                      android:textSize="18sp"/>
+            <Space android:layout_width="5dp"
+                   android:layout_height="wrap_content"/>
+            <TextView android:id="@+id/data_value"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text="@string/no_data"
+                      android:textSize="18sp"/>
+        </LinearLayout>
         <com.example.android.bluetoothlegatt.MyProgress
             android:id="@+id/pgsBar"
             android:max="100"
@@ -22,8 +39,18 @@
             android:visibility="visible"
             android:background="@color/listview_item_normal" />
 
+        <TextView
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Large Text"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.51"
+            android:layout_marginTop="10dp"
+            android:id="@+id/textView"/>
+
         <Button
-            android:layout_gravity="center"
+            android:layout_gravity="center_horizontal"
             android:id="@+id/startButton"
             android:layout_width="150dp"
             android:onClick="startButton"

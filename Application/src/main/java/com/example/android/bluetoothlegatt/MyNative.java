@@ -1,4 +1,4 @@
-package com.example.android.bluetoothlegatt;
+    package com.example.android.bluetoothlegatt;
 
 import java.nio.MappedByteBuffer;
 import java.util.Map;
@@ -23,9 +23,9 @@ public class MyNative {
     public native int update_getImageInfo(int index, byte[] ppVerStr, byte[] pHwInfo,
                                            byte[] pImageSize, byte[] pCrc, byte[] ppData);
 
-    public native int wavemake(byte[] fileBytes);
+    public native int wavemake(byte[] fileBytes, int fileBytesLen,byte[] wavedata, int wavedataLen);
 
-    public native static int audioInterface(int sample_rate, int data_rate,int reversePolarity);
-    public native static int cToJava(byte[] adc_value,int adc_value_length, byte[] code_data);
+    public native  int audioInterface(int sample_rate, int data_rate,int reversePolarity);
+    public native  int cToJava(byte[] adc_value,int adc_value_length, byte[] code_data);
 
 }

@@ -954,7 +954,7 @@ public class DeviceControlActivity extends Activity {
         return imageReadLen;
     }
 
-    /*-------------------------------------------------------------------------
+/*-------------------------------------------------------------------------
 * 函数: update_readImageData
 * 说明: 读取image数据
 * 参数: ptUpdataInfo

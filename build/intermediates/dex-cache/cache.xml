@@ -1,26 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
-<items version="2" >
+<items version="2" />
 
-    <item
-        jar="H:\NewProj\W200Update\Application\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\libs\internal_impl-23.0.0.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="8bd336eeae661e8311330284897ee07f8ebaa297">
-        <dex dex="H:\NewProj\W200Update\Application\build\intermediates\pre-dexed\debug\internal_impl-23.0.0_f0bad4df0ad7c2a469de3d556bd461f769d460a6.jar" />
-    </item>
-    <item
-        jar="H:\SDK\extras\android\m2repository\com\android\support\support-annotations\23.0.0\support-annotations-23.0.0.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="990e7f98a7bad86a40b1f0bcfeb039023afd0839">
-        <dex dex="H:\NewProj\W200Update\Application\build\intermediates\pre-dexed\debug\support-annotations-23.0.0_d5543c893745d5652fd2ae7d7cf3b4be5ed801bc.jar" />
-    </item>
-    <item
-        jar="H:\NewProj\W200Update\Application\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="8413c27b45b7fe61dca4a98159f65e2cee215f5a">
-        <dex dex="H:\NewProj\W200Update\Application\build\intermediates\pre-dexed\debug\com.android.support-support-v4-23.0.0_89e3548ec829735803654f161bc23e6f85e1a455.jar" />
-    </item>
-
-</items>
