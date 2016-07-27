@@ -42,6 +42,7 @@ public class Update extends Activity {
     int audioMaxVolumn;//  最大音量
     int audioCurrentVolumn;// 当前音量
 
+    FileOutputStream fos = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,10 +59,36 @@ public class Update extends Activity {
 
         start_play();
         startRecord();
+
+        try {
+            File file = new File(AudioName);
+            if (file.exists()) {
+                file.delete();
+            }
+            fos = new FileOutputStream(file);// 建立一个可存取字节的文件
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void recordwav(View v)
+    {
+        isRecord = false;
+        try {
+            fos.close();// 关闭写入流
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        copyWaveFile(AudioName, NewAudioName);//给裸数据加上头文件
+        Log.i("记录波形","记录波形");
     }
 
     public void startButton(View v)
     {
+
+        Log.i("生成WAV","生成WAV");
+
         Log.i("开始转换文件","开始转换文件");
         //读SD中的文件
         try{
@@ -255,7 +282,7 @@ public class Update extends Activity {
         long totalAudioLen = 0;
         long totalDataLen = totalAudioLen + 36;
         long longSampleRate = sampleRateInHz;
-        int channels = 2;
+        int channels = 1;
         long byteRate = 16 * sampleRateInHz * channels / 8;
         byte[] data = new byte[48000*2];
         try {
@@ -610,7 +637,7 @@ public class Update extends Activity {
                     if (pdata[offset] == UPDATE_REJECT_REASON_HW_ERR)
                     {
 				        /* 硬件版本错误 */
-                        Log.i("硬件版本错误....","重新发送升级请求");
+                        Log.w("硬件版本错误....","重新发送升级请求");
                         imageIndex++;
                         if (imageIndex >= imageNum) imageIndex = 0;
                     }
@@ -643,14 +670,14 @@ public class Update extends Activity {
                         }
                         else
                         {
-                            Log.i("不支持OAD....","");
+                            Log.w("不支持OAD....","");
                             supportCipher = false;
                         }
 
                         break;
                     case UPDATE_REJECT_REASON_HW_ERR:
 			        /* 硬件版本错误 */
-                        Log.i("硬件版本错误....","硬件版本错误");
+                        Log.w("硬件版本错误....","硬件版本错误");
                         imageIndex++;
                         if (imageIndex >= imageNum) imageIndex = 0;
                         ret = myNative.update_getImageInfo(imageIndex,Update_info.ppVer_Str,
@@ -663,7 +690,7 @@ public class Update extends Activity {
                         break;
                     case UPDATE_REJECT_REASON_SIZE_ERR:
 			        /* 升级包大小错误(超过限制) */
-                        Log.i("升级包大小错误(超过限制)","超过限制");
+                        Log.w("升级包大小错误(超过限制)","超过限制");
                         break;
                 }
                 break;
@@ -679,7 +706,7 @@ public class Update extends Activity {
                 else
                 {
 			        /* 校验值错误，重发升级请求，重新升级 */
-                    Log.i("校验值错误，重发升级请求，重新升级","校验值错误");
+                    Log.w("校验值错误，重发升级请求，重新升级","校验值错误");
                     update_step = UPDATE_STEP_SEND_REQUEST;
                     update_sendSize = 0;
 
@@ -703,7 +730,7 @@ public class Update extends Activity {
                 }
                 else
                 {
-                    Log.i("数据包接收错误，重发","数据包接收错误");
+                    Log.w("数据包接收错误，重发","数据包接收错误");
 			        /* 数据包接收错误，重发 */
                 }
                 update_step--;
@@ -789,12 +816,20 @@ public class Update extends Activity {
     /**
      * 录音数据解析
      */
+    Boolean isRecord =false;
     private void writeAudioDataToFile() {
         byte data[] = new byte[recBufSize];
         int read = 0;
         while (true) {
             read = audioRecord.read(data, 0, recBufSize);
             if (AudioRecord.ERROR_INVALID_OPERATION != read) {
+                if (isRecord == true) {
+                    try {
+                        fos.write(data);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
                 simple_c2java(data);
             }
         }
@@ -835,8 +870,14 @@ public class Update extends Activity {
             for (byte byteChar : data)
                 stringBuilder.append(String.format("%02X ", byteChar));//表示以十六进制形式输出,02表示不足两位，前面补0输出；出过两位，不影响
 
-            Log.d("数据解析结果", stringBuilder.toString() +"////" + reversePolarity);
-            if (stringBuilder.toString().contains("53 01 ")
+            Log.w("数据解析结果", stringBuilder.toString() +"////" + reversePolarity);
+            if(stringBuilder.toString().contains("52 D0 ")
+                    && stringBuilder.toString().startsWith("40")
+                    && stringBuilder.toString().endsWith("2A ")){
+                updateReceive_respons(data,data.length );
+
+            }
+            else if (stringBuilder.toString().contains("53 01 ")
                     && stringBuilder.toString().startsWith("40")
                     && stringBuilder.toString().endsWith("2A ")) {
                 if (Util.checkCurrentNumber(stringBuilder.toString())) {

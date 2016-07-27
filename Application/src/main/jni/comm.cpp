@@ -2,6 +2,13 @@
 #include <string.h>
 #include <jni.h>
 //#include "hyTypes.h"
+//导入日志头文件
+#include <android/log.h>
+//修改日志tag中的值
+#define LOG_TAG "logfromc"
+//日志显示的等级
+#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
 
 #define BUFF_LENGTH		102400
 jshort adcBuffer[BUFF_LENGTH];
@@ -178,7 +185,7 @@ int audioInterface_wav2digital(jshort *x, int n, jbyte *pdata)//记得添加波�
 							}
 							if (suffix > 0)
 							{
-								if (++suffix > 8)//表示数据结束
+								if (++suffix > 9)//表示数据结束
 								{
 									dataIndex--;
 									memcpy(&pdata[decodeDataLen],data,dataIndex);
@@ -366,7 +373,7 @@ int audioInterface_wav2digital(jshort *x, int n, jbyte *pdata)//记得添加波�
 								}
 								if (suffix > 0)
 								{
-									if (++suffix > 8)//表示数据结束
+									if (++suffix > 9)//表示数据结束
 									{
 										dataIndex--;
 										memcpy(&pdata[decodeDataLen],data,dataIndex);
@@ -590,6 +597,7 @@ int audioInterface_wav2digital(jshort *x, int n, jbyte *pdata)//记得添加波�
 
 		}
 	}
+	//LOGI("函数跑了");
 	return decodeDataLen;
 }
 #if 0
