@@ -50,7 +50,7 @@ public class Update extends Activity {
         start = (Button) findViewById( R.id.startButton);
 
         mDataField = (TextView) findViewById(R.id.data_value);
-
+        myProgress = (MyProgress) findViewById(R.id.pgsBar);
         textView = (TextView)findViewById(R.id.textView);
 
         am = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
@@ -131,7 +131,7 @@ public class Update extends Activity {
         Log.i("开始升级", "button onClick");
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         start.setClickable(false);
-
+        myNative.update_checkSetFlag(0);
         //int ret = update_fileParse(fileName);
 
         updateFlag = true;
@@ -221,6 +221,7 @@ public class Update extends Activity {
             }
             Log.i("使能按键：", "wait...");
             update_step = 0;
+            update_sendSize = 0;
             start.setClickable(true);
         }
     };
@@ -346,7 +347,7 @@ public class Update extends Activity {
                 break;
             case UPDATE_STEP_WAIT_REQUEST_RES:
                 consumingTime = System.currentTimeMillis();
-                if ((consumingTime - startTime) >= 1500)
+                if ((consumingTime - startTime) >= 3000)
                 {
 			        /* 超时重发 */
                     Log.i("发送升级请求：", "超时重发");
@@ -371,13 +372,13 @@ public class Update extends Activity {
                     /* 超时 */
                     /* 重启，认为升级成功 */
                     //mySetRecvInfo("升级完成");
-                    Log.i("升级完成：", "升级完成");
+                    Log.i("CRC校验正确", "升级完成");
                     update_step = UPDATE_STEP_CRC_RES_RECV;
                 }
                 break;
             case UPDATE_STEP_CRC_RES_RECV:
-                Log.i("CRC校验正确", "升级完成");
                 Log.i("升级完成", "升级完成");
+                sendMessage(22);
                 //升级成功
                 break;
         }
@@ -391,6 +392,7 @@ public class Update extends Activity {
         handler.sendMessage(message);
     }
 
+    String uistring =  "";
     final Handler handler = new Handler()
     {
         @Override
@@ -402,6 +404,45 @@ public class Update extends Activity {
                     update_step = 0;
                     //getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                     Toast.makeText(getApplicationContext(), "升级成功！！！", Toast.LENGTH_SHORT).show();
+                    break;
+                case 10:
+                    mDataField.setText("数据解析结果:"+ uistring);
+                    break;
+                case 11:
+                    textView.setText("解析升级请求数据");
+                    break;
+                case 12:
+                    textView.setText("硬件版本错误....:重新发送升级请求");
+                    break;
+                case 13:
+                    textView.setText("更换升级文件....");
+                    break;
+                case 14:
+                    textView.setText("请求被接收....");
+                    break;
+                case 15:
+                    textView.setText("芯片支持OAD....");
+                    break;
+                case 16:
+                    textView.setText("硬件版本错误....");
+                    break;
+                case 17:
+                    textView.setText("升级包大小错误(超过限制)....");
+                    break;
+                case 18:
+                    textView.setText("校验值错误，重发升级请求，重新升级");
+                    break;
+                case 19:
+                    textView.setText("数据包发送完成，等待CRC校验结果...");
+                    break;
+                case 20:
+                    textView.setText("数据包接收错误，重发");
+                    break;
+                case 21:
+                    textView.setText("数据包发送完成，等待CRC校验结果...");
+                    break;
+                case 22:
+                    textView.setText("CRC校验完成，升级成功...");
                     break;
 
             }
@@ -438,7 +479,9 @@ public class Update extends Activity {
         temp[len+1] = (byte)0xFF;
         len += 2;
         //memcpy(&temp[len], &tUpdate_info.hw_info, 4);
-        System.arraycopy(Update_info.hw_info,0,temp,len,4);
+        byte[] hwinfo = {0x01,0x01,0x01,0x02};
+        System.arraycopy(hwinfo,0,temp,len,4);
+        //System.arraycopy(Update_info.hw_info,0,temp,len,4);
         len += 4;
         //memcpy(&temp[len], &tUpdate_info.image_size, 4);
         System.arraycopy(Update_info.image_size,0,temp,len,4);
@@ -629,6 +672,7 @@ public class Update extends Activity {
         switch (index)
         {
             case UPDATE_REQUEST_ID:
+                sendMessage(11);
                 Log.i("解析升级请求数据....","解析升级请求数据");
                 if (len > 3) ret = myNative.update_checkSetFlag(1);
                 else ret = myNative.update_checkSetFlag(0);
@@ -637,6 +681,7 @@ public class Update extends Activity {
                     if (pdata[offset] == UPDATE_REJECT_REASON_HW_ERR)
                     {
 				        /* 硬件版本错误 */
+                        sendMessage(12);
                         Log.w("硬件版本错误....","重新发送升级请求");
                         imageIndex++;
                         if (imageIndex >= imageNum) imageIndex = 0;
@@ -648,6 +693,7 @@ public class Update extends Activity {
                             Update_info.image_data);
                     filedataLen = UpdateOpt.byteArrayToInt(Update_info.image_size);
                     Log.i("更换升级文件：=",String.valueOf(imageIndex) +":" + String.valueOf(filedataLen));
+                    sendMessage(13);
                     return;
                 }
 		        /* 接收升级请求回应 */
@@ -656,6 +702,7 @@ public class Update extends Activity {
                     case UPDATE_REQUST_OK:
 			        /* 升级请求被接受 */
                         Log.i("请求被接收....","请求被接收");
+                        sendMessage(14);
                         try {
                             Thread.currentThread().sleep(2000);
                         } catch (InterruptedException e) {
@@ -666,11 +713,13 @@ public class Update extends Activity {
                         if (len > 3)
                         {
                             Log.i("芯片支持OAD....","芯片支持OAD");
+                            sendMessage(15);
                             supportCipher = true;
                         }
                         else
                         {
                             Log.w("不支持OAD....","");
+                            textView.setText("不支持OAD....");
                             supportCipher = false;
                         }
 
@@ -678,6 +727,7 @@ public class Update extends Activity {
                     case UPDATE_REJECT_REASON_HW_ERR:
 			        /* 硬件版本错误 */
                         Log.w("硬件版本错误....","硬件版本错误");
+                        sendMessage(16);
                         imageIndex++;
                         if (imageIndex >= imageNum) imageIndex = 0;
                         ret = myNative.update_getImageInfo(imageIndex,Update_info.ppVer_Str,
@@ -691,6 +741,7 @@ public class Update extends Activity {
                     case UPDATE_REJECT_REASON_SIZE_ERR:
 			        /* 升级包大小错误(超过限制) */
                         Log.w("升级包大小错误(超过限制)","超过限制");
+                        sendMessage(17);
                         break;
                 }
                 break;
@@ -707,6 +758,7 @@ public class Update extends Activity {
                 {
 			        /* 校验值错误，重发升级请求，重新升级 */
                     Log.w("校验值错误，重发升级请求，重新升级","校验值错误");
+                    sendMessage(18);
                     update_step = UPDATE_STEP_SEND_REQUEST;
                     update_sendSize = 0;
 
@@ -724,6 +776,7 @@ public class Update extends Activity {
                     {
 				        /* 数据包发送完成，等待CRC校验结果 */
                         Log.i("数据包发送完成，等待CRC校验结果","等待CRC校验");
+                        sendMessage(19);
                         update_step = UPDATE_STEP_WAIT_CRC_RES;
                         break;
                     }
@@ -731,6 +784,7 @@ public class Update extends Activity {
                 else
                 {
                     Log.w("数据包接收错误，重发","数据包接收错误");
+                    sendMessage(20);
 			        /* 数据包接收错误，重发 */
                 }
                 update_step--;
@@ -869,8 +923,9 @@ public class Update extends Activity {
         if (data != null && data.length > 0) {
             for (byte byteChar : data)
                 stringBuilder.append(String.format("%02X ", byteChar));//表示以十六进制形式输出,02表示不足两位，前面补0输出；出过两位，不影响
-
+            uistring = stringBuilder.toString();
             Log.w("数据解析结果", stringBuilder.toString() +"////" + reversePolarity);
+            sendMessage(10);
             if(stringBuilder.toString().contains("52 D0 ")
                     && stringBuilder.toString().startsWith("40")
                     && stringBuilder.toString().endsWith("2A ")){

@@ -15,12 +15,6 @@ ADDED from H:\NewProj\W200Update\Application\src\main\AndroidManifest.xml:17:1-7
 		INJECTED from H:\NewProj\W200Update\Application\src\main\AndroidManifest.xml
 	xmlns:android
 		ADDED from H:\NewProj\W200Update\Application\src\main\AndroidManifest.xml:17:11-69
-uses-feature#android.hardware.bluetooth_le
-ADDED from H:\NewProj\W200Update\Application\src\main\AndroidManifest.xml:31:5-33:34
-	android:required
-		ADDED from H:\NewProj\W200Update\Application\src\main\AndroidManifest.xml:33:9-32
-	android:name
-		ADDED from H:\NewProj\W200Update\Application\src\main\AndroidManifest.xml:32:9-53
 uses-permission#android.permission.RECORD_AUDIO
 ADDED from H:\NewProj\W200Update\Application\src\main\AndroidManifest.xml:35:5-70
 	android:name
@@ -66,18 +60,6 @@ category#android.intent.category.LAUNCHER
 ADDED from H:\NewProj\W200Update\Application\src\main\AndroidManifest.xml:55:17-76
 	android:name
 		ADDED from H:\NewProj\W200Update\Application\src\main\AndroidManifest.xml:55:27-74
-activity#com.example.android.bluetoothlegatt.DeviceControlActivity
-ADDED from H:\NewProj\W200Update\Application\src\main\AndroidManifest.xml:67:9-69:52
-	android:screenOrientation
-		ADDED from H:\NewProj\W200Update\Application\src\main\AndroidManifest.xml:69:13-50
-	android:name
-		ADDED from H:\NewProj\W200Update\Application\src\main\AndroidManifest.xml:68:13-85
-service#com.example.android.bluetoothlegatt.BluetoothLeService
-ADDED from H:\NewProj\W200Update\Application\src\main\AndroidManifest.xml:71:9-73:37
-	android:enabled
-		ADDED from H:\NewProj\W200Update\Application\src\main\AndroidManifest.xml:73:13-35
-	android:name
-		ADDED from H:\NewProj\W200Update\Application\src\main\AndroidManifest.xml:72:13-82
 uses-sdk
 INJECTED from H:\NewProj\W200Update\Application\src\main\AndroidManifest.xml reason: use-sdk injection requested
 MERGED from [com.android.support:support-v4:23.0.0] H:\NewProj\W200Update\Application\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\AndroidManifest.xml:20:5-43
