@@ -34,7 +34,7 @@ public class Update extends Activity {
     private TextView textView;
     MyNative myNative = new MyNative();
     private MyProgress myProgress = null;
-    private Button start;
+    private Button start,versioninfo;
     String fileInput;
     String fileOutput;
     public static Boolean receiveDataFlag = false;
@@ -49,7 +49,9 @@ public class Update extends Activity {
         setContentView(R.layout.activity_update);
         start = (Button) findViewById( R.id.startButton);
 
+        versioninfo = (Button) findViewById(R.id.versioninfo);
         mDataField = (TextView) findViewById(R.id.data_value);
+
         myProgress = (MyProgress) findViewById(R.id.pgsBar);
         textView = (TextView)findViewById(R.id.textView);
 
@@ -70,6 +72,11 @@ public class Update extends Activity {
             e.printStackTrace();
         }
 
+    }
+
+    public void versioninfo(View v){
+        getHw_version = true;
+        mRunnable.run();
     }
 
     public void recordwav(View v)
@@ -382,6 +389,7 @@ public class Update extends Activity {
                 sendMessage(22);
                 //升级成功
                 break;
+
         }
         return update_step;
     }
@@ -410,7 +418,8 @@ public class Update extends Activity {
                 case 3:
                     mDataField.setText("发送升级数据");
                 case 10:
-                    mDataField.setText("数据解析结果:"+ uistring.substring( 12, 20) );
+                    if(uistring.length()>20)
+                        mDataField.setText("数据解析结果:"+ uistring.substring( 12, 20) );
                     break;
                 case 11:
                     textView.setText("解析升级请求数据");
@@ -447,6 +456,14 @@ public class Update extends Activity {
                     break;
                 case 22:
                     textView.setText("CRC校验完成，升级成功...");
+                    break;
+                case 30:
+                    textView.setText(new String(Hw_version[0] ) +"\n"
+                            +new String(Hw_version[1] ) +"\n");
+                    break;
+                case 31:
+                    break;
+                default:
                     break;
 
             }
@@ -594,16 +611,16 @@ public class Update extends Activity {
     }
 
     Boolean getHw_version = false;
-    byte[][] Hw_version = new byte[6][64];
+    byte[][] Hw_version = new byte[2][64];
     int HW_index = 0;
-    int Hw_dataindex = 6;
+    int Hw_dataindex = 2;
     public int DecodeData(byte[] decodedata,int datalen)
     {
         byte[] data = decodedata;
         receiveDataFlag = true;
-        PrintLog.printHexString("接收到data*****************", data);
-        displayData(PrintLog.returnHexString(data));
-        sendMessage(1);
+        //PrintLog.printHexString("接收到data*****************", data);
+        //displayData(PrintLog.returnHexString(data));
+        //sendMessage(1);
         if(getHw_version && data != null)
         {
             if(data[0]  == 0x40)
@@ -619,15 +636,17 @@ public class Update extends Activity {
                 Hw_dataindex --;
                 if(Hw_dataindex <=0)
                 {
-                    Hw_dataindex =6;
+                    Hw_dataindex =2;
                     //getHw_version = false;
                     Log.i("版本信息接受完毕","版本信息接受完毕");
-                    textView.setText(new String(Hw_version[0] ) +"\n"
-                            +new String(Hw_version[1] ) +"\n"
-                            +new String(Hw_version[2]) +"\n"
-                            +new String(Hw_version[3]) +"\n"
-                            +new String(Hw_version[4]) +"\n"
-                            +new String(Hw_version[5]));
+                    sendMessage(30);
+//                    textView.setText(new String(Hw_version[0] ) +"\n"
+//                            +new String(Hw_version[1] ) +"\n");
+//                            +new String(Hw_version[2]) +"\n"
+//                            +new String(Hw_version[3]) +"\n"
+//                            +new String(Hw_version[4]) +"\n"
+//                            +new String(Hw_version[5]));
+                    getHw_version = false;
 
                 }
             }
@@ -934,18 +953,21 @@ public class Update extends Activity {
             if(stringBuilder.toString().contains("52 D0 ")
                     && stringBuilder.toString().startsWith("40")
                     && stringBuilder.toString().endsWith("2A ")){
-                updateReceive_respons(data,data.length );
+
+                //updateReceive_respons(data,data.length );
+                DecodeData(data,data.length);
 
             }
             else if (stringBuilder.toString().contains("53 01 ")
                     && stringBuilder.toString().startsWith("40")
                     && stringBuilder.toString().endsWith("2A ")) {
                 if (Util.checkCurrentNumber(stringBuilder.toString())) {
-                    String ss = Util.getCurrentNumberString(stringBuilder
-                            .toString());
-                    stringBuilder.delete(0, stringBuilder.length());
-                    insert_detect_success_flag = true;
-                    return ss.length() > 0 ? ss : "";
+                    DecodeData(data,data.length);
+//                    String ss = Util.getCurrentNumberString(stringBuilder
+//                            .toString());
+//                    stringBuilder.delete(0, stringBuilder.length());
+//                    insert_detect_success_flag = true;
+//                    return ss.length() > 0 ? ss : "";
                 }
             } else if (stringBuilder.toString().startsWith("40 03 52 0D")) {
                 String ss = Util.getPowerNumberString(stringBuilder.toString());
@@ -969,6 +991,17 @@ public class Update extends Activity {
         }
         return "";
     }
+
+    Runnable mRunnable = new Runnable() {
+        public void run() {
+            //自定义功能
+//            byte[] bytes = updateOpt.wakeupData;        //写入发送数据
+//            WriteComm( bytes, bytes.length);
+            byte[] data = {0x00,0x00};
+            Log.i("获取版本","获取版本");
+            comm_send(COMM_TRANS_TYPE_SEND,COMM_CMD_TYPE_VERSION,data,2);
+        }
+    };
 
     /**
      * 这里提供一个头信息。插入这些信息就可以得到可以播放的文件。
