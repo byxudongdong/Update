@@ -229,6 +229,7 @@ public class Update extends Activity {
     int WriteComm(byte[] bytes,int length){
         int wavelen =0;
         byte[] wavedata = new byte[48000*2];
+        Log.d("转换元数据","转换元数据");
         int count = myNative.wavemake(bytes,length,wavedata,wavelen);
 //        writeDateTOFile(wavedata);//往文件中写入裸数据
 //        copyWaveFile(AudioName, NewAudioName);//给裸数据加上头文件
@@ -317,11 +318,11 @@ public class Update extends Activity {
                 //while(!receiveDataFlag)
             {
                 update_sendUpdateReq();
-                try {
-                    Thread.currentThread().sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    Thread.currentThread().sleep(1);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
             }
             update_sendSize = 0;
             update_step++;
@@ -347,7 +348,7 @@ public class Update extends Activity {
                 break;
             case UPDATE_STEP_WAIT_REQUEST_RES:
                 consumingTime = System.currentTimeMillis();
-                if ((consumingTime - startTime) >= 3000)
+                if ((consumingTime - startTime) >= 2000)
                 {
 			        /* 超时重发 */
                     Log.i("发送升级请求：", "超时重发");
@@ -403,10 +404,13 @@ public class Update extends Activity {
                 case 0:
                     update_step = 0;
                     //getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                    Toast.makeText(getApplicationContext(), "升级成功！！！", Toast.LENGTH_SHORT).show();
+                    textView.setText("CRC校验完成，升级成功...");
+                    Toast.makeText(getApplicationContext(), "升级成功！！！", Toast.LENGTH_LONG).show();
                     break;
+                case 3:
+                    mDataField.setText("发送升级数据");
                 case 10:
-                    mDataField.setText("数据解析结果:"+ uistring);
+                    mDataField.setText("数据解析结果:"+ uistring.substring( 12, 20) );
                     break;
                 case 11:
                     textView.setText("解析升级请求数据");
@@ -496,7 +500,7 @@ public class Update extends Activity {
 
     int update_sendImageData()
     {
-        byte UPDATE_SEND_PAKET_SIZE	=	(92);//(100)//(112)//(32)//(12)//(14)//(64)//
+        byte UPDATE_SEND_PAKET_SIZE	=	(120);//(100)//(112)//(32)//(12)//(14)//(64)//
         byte[] temp = new byte[UPDATE_SEND_PAKET_SIZE+2];
         int imageReadLen = 0;
         int index;
@@ -505,7 +509,7 @@ public class Update extends Activity {
         //memcpy(&temp[0], &index, sizeof(U16));
         temp[0] = (byte) (index >> 8 * 0 & 0xFF);
         temp[1] = (byte) (index >> 8 * 1 & 0xFF);
-
+        Log.d("读取元数据","读取元数据");
         imageReadLen = update_readImageData(temp, update_sendSize, UPDATE_SEND_PAKET_SIZE);
         if (imageReadLen <= 0)
         {
@@ -527,7 +531,7 @@ public class Update extends Activity {
     int update_readImageData(byte pData[], int offset, int len)
     {
         int readLen;
-        byte[] senddata=new byte[98];
+        byte[] senddata=new byte[120+6];
 
         if (offset >= filedataLen)
         {
@@ -580,7 +584,7 @@ public class Update extends Activity {
             sum += temp[i+1];
         }
         temp[len+4] = (byte)sum;
-        //Log.i("调用特征值写：", "wait...");
+
         byte[] temp1 = new byte[ len+7];
         temp1[0] = 0x11;
         System.arraycopy(temp,0,temp1,1,len+6);
@@ -645,7 +649,7 @@ public class Update extends Activity {
     final byte UPDATE_REJECT_REASON_HW_ERR		=	(0x01);//硬件版本错误
     final byte UPDATE_REJECT_REASON_SIZE_ERR	=	(0x02);//升级包大小错误(超过限制)
 
-    int     UPDATE_SEND_PAKET_SIZE  = 92;
+    int     UPDATE_SEND_PAKET_SIZE  = 120;
 
     final int UPDATE_STEP_SEND_REQUEST	=	0;
     final int UPDATE_STEP_WAIT_REQUEST_RES=	1;
@@ -704,7 +708,7 @@ public class Update extends Activity {
                         Log.i("请求被接收....","请求被接收");
                         sendMessage(14);
                         try {
-                            Thread.currentThread().sleep(2000);
+                            Thread.currentThread().sleep(500);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -778,6 +782,7 @@ public class Update extends Activity {
                         Log.i("数据包发送完成，等待CRC校验结果","等待CRC校验");
                         sendMessage(19);
                         update_step = UPDATE_STEP_WAIT_CRC_RES;
+                        startTime = System.currentTimeMillis();  //開始時間
                         break;
                     }
                 }
@@ -1020,5 +1025,45 @@ public class Update extends Activity {
         header[42] = (byte) ((totalAudioLen >> 16) & 0xff);
         header[43] = (byte) ((totalAudioLen >> 24) & 0xff);
         out.write(header, 0, 44);
+    }
+
+
+    //打开扬声器
+    public void OpenSpeaker() {
+
+        try{
+            AudioManager audioManager = am;//(AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+            audioManager.setMode(AudioManager.ROUTE_SPEAKER);
+            audioCurrentVolumn = audioManager.getStreamVolume(AudioManager.STREAM_VOICE_CALL);
+
+            if(!audioManager.isSpeakerphoneOn()) {
+                audioManager.setSpeakerphoneOn(true);
+
+                audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL,
+                        audioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL ),
+                        AudioManager.STREAM_VOICE_CALL);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    //关闭扬声器
+    public void CloseSpeaker() {
+
+        try {
+            AudioManager audioManager = am;//(AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+            if(audioManager != null) {
+                if(audioManager.isSpeakerphoneOn()) {
+                    audioManager.setSpeakerphoneOn(false);
+                    audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL,audioCurrentVolumn,
+                            AudioManager.STREAM_VOICE_CALL);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//Toast.makeText(context,"揚聲器已經關閉",Toast.LENGTH_SHORT).show();
     }
 }

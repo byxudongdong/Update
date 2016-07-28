@@ -1,10 +1,10 @@
 See file:///H:/NewProj/W200Update/Application/build/tmp/compileJniTestX86DebugSharedLibraryJniTestMainC/output.txt for all output for compileJniTestX86DebugSharedLibraryJniTestMainC.
 compiling main.c successful.
 H:\NewProj\W200Update\Application\src\main\jni\main.c:398:51: warning: passing 'char *' to parameter of type 'jbyte *' (aka 'signed char *') converts between pointers to integer types with different sign [-Wpointer-sign]
-        (*env)->ReleaseByteArrayElements(env, fileBytes, Bytes, 0);
+        (*env)->ReleaseByteArrayElements(env, fileBytes, Bytes, 1);
                                                          ^~~~~
 H:\NewProj\W200Update\Application\src\main\jni\main.c:399:50: warning: passing 'char *' to parameter of type 'jbyte *' (aka 'signed char *') converts between pointers to integer types with different sign [-Wpointer-sign]
-        (*env)->ReleaseByteArrayElements(env, wavedata, wave, 0);
+        (*env)->ReleaseByteArrayElements(env, wavedata, wave, 1);
                                                         ^~~~
 H:\NewProj\W200Update\Application\src\main\jni\main.c:431:51: warning: passing 'char *' to parameter of type 'jbyte *' (aka 'signed char *') converts between pointers to integer types with different sign [-Wpointer-sign]
         (*env)->ReleaseByteArrayElements(env, fileBytes, Bytes, 0);

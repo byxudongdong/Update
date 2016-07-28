@@ -285,6 +285,10 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_update_
 //			}
 //			ppData = imageData;
 		}
+		env->ReleaseByteArrayElements(ppVer_Str, (jbyte*)ppVerStr, JNI_COMMIT);
+		env->ReleaseByteArrayElements(pHw_Info, (jbyte*)pHwInfo, JNI_COMMIT);
+		env->ReleaseByteArrayElements(pImage_Size, (jbyte*)pImageSize, JNI_COMMIT);
+		env->ReleaseByteArrayElements(p_Crc, (jbyte*)pCrc, JNI_COMMIT);
 
 		return 0;
 	}

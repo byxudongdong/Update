@@ -52,6 +52,7 @@ public class MyProgress extends ProgressBar {
         //this.setText();
         Rect rect = new Rect();
         this.mPaint.getTextBounds(this.text, 0, this.text.length(), rect);
+        this.mPaint.setTextSize(32);
         int x = (getWidth() / 2) - rect.centerX();
         int y = (getHeight() / 2) - rect.centerY();
         canvas.drawText(this.text, x, y, this.mPaint);
