@@ -2,6 +2,7 @@ package com.hyco.w200;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
@@ -167,7 +168,7 @@ public class Update extends Activity {
                     imageNum = myNative.update_fileParse(filePath.getBytes());
                 }catch (Exception  e) {
                     Log.i("升级文件不存在：", "请放入升级文件");
-                    //sendMessage(6);
+                    sendMessage(6);
                 }
 
                 Log.i("升级文件个数",String.valueOf(imageNum));
@@ -236,8 +237,9 @@ public class Update extends Activity {
     int WriteComm(byte[] bytes,int length){
         int wavelen =0;
         byte[] wavedata = new byte[48000*2];
-        Log.d("转换元数据","转换元数据");
+        Log.d("转换元数据","转换元数据start");
         int count = myNative.wavemake(bytes,length,wavedata,wavelen);
+        Log.d("转换元数据","转换元数据ok");
 //        writeDateTOFile(wavedata);//往文件中写入裸数据
 //        copyWaveFile(AudioName, NewAudioName);//给裸数据加上头文件
 //        Log.i("生成WAV","生成WAV");
@@ -414,9 +416,22 @@ public class Update extends Activity {
                     //getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                     textView.setText("CRC校验完成，升级成功...");
                     Toast.makeText(getApplicationContext(), "升级成功！！！", Toast.LENGTH_LONG).show();
+                    try {
+                        Thread.currentThread().sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+//                    Intent i = getBaseContext().getPackageManager()
+//                            .getLaunchIntentForPackage(getBaseContext().getPackageName());
+//                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(i);
                     break;
                 case 3:
-                    mDataField.setText("发送升级数据");
+                    textView.setText("发送升级数据");
+                    break;
+                case 6:
+                    Toast.makeText(getApplicationContext(), "请将升级文件放入SD卡根目录！！！", Toast.LENGTH_LONG).show();
+                    break;
                 case 10:
                     if(uistring.length()>20)
                         mDataField.setText("数据解析结果:"+ uistring.substring( 12, 20) );
@@ -526,7 +541,7 @@ public class Update extends Activity {
         //memcpy(&temp[0], &index, sizeof(U16));
         temp[0] = (byte) (index >> 8 * 0 & 0xFF);
         temp[1] = (byte) (index >> 8 * 1 & 0xFF);
-        Log.d("读取元数据","读取元数据");
+        //Log.d("读取元数据","读取元数据");
         imageReadLen = update_readImageData(temp, update_sendSize, UPDATE_SEND_PAKET_SIZE);
         if (imageReadLen <= 0)
         {
@@ -922,7 +937,9 @@ public class Update extends Activity {
     private String code_msg = "";
     public void simple_c2java(byte[] byte_source) {
         code_data = new byte[320];
+        //Log.d("解析波形","解析波形start");
         s = myNative.cToJava(byte_source, byte_source.length, code_data);
+        //Log.d("解析波形","解析波形ok");
         if (s > 0) {
             byte[] send_data = new byte[s];
             System.arraycopy(code_data, 0, send_data, 0, s);
