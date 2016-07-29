@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -78,6 +79,25 @@ public class Update extends Activity {
     public void versioninfo(View v){
         getHw_version = true;
         mRunnable.run();
+        try {
+            Thread.currentThread().sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        //if(Hw_dataindex <=0)
+        {
+            getHw_version = false;
+            //getHw_version = false;
+            Log.i("版本信息接受完毕", "版本信息接受完毕");
+            sendMessage(30);
+//                    textView.setText(new String(Hw_version[0] ) +"\n"
+//                            +new String(Hw_version[1] ) +"\n");
+//                            +new String(Hw_version[2]) +"\n"
+//                            +new String(Hw_version[3]) +"\n"
+//                            +new String(Hw_version[4]) +"\n"
+//                            +new String(Hw_version[5]));
+
+        }
     }
 
     public void recordwav(View v)
@@ -139,6 +159,8 @@ public class Update extends Activity {
         Log.i("开始升级", "button onClick");
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         start.setClickable(false);
+        versioninfo.setClickable(false);
+
         myNative.update_checkSetFlag(0);
         //int ret = update_fileParse(fileName);
 
@@ -231,6 +253,7 @@ public class Update extends Activity {
             update_step = 0;
             update_sendSize = 0;
             start.setClickable(true);
+            versioninfo.setClickable(true);
         }
     };
 
@@ -473,8 +496,14 @@ public class Update extends Activity {
                     textView.setText("CRC校验完成，升级成功...");
                     break;
                 case 30:
-                    textView.setText(new String(Hw_version[0] ) +"\n"
-                            +new String(Hw_version[1] ) +"\n");
+                    String textinfo = "";
+                    for(int k = Hw_dataindex;k<6;k++)
+                    {
+                        textinfo = textinfo + new String(Hw_version[k] ) +"\n";
+                    }
+                    textView.setText(textinfo);
+
+                    Hw_dataindex =6;
                     break;
                 case 31:
                     break;
@@ -498,6 +527,11 @@ public class Update extends Activity {
     byte	COMM_CMD_TYPE_DONGLE_SN	=(byte)	(0xD2);	//dongle序列号z
     byte	COMM_CMD_TYPE_TOUCH		=	(byte)0xDF;	//touch数据
     byte	COMM_CMD_TYPE_VERSION		=	(byte)(0xE0);	//R11版本信息
+
+    //final int UPDATE_REQUEST_ID		=	(int)(0xFFFD);
+    //final int UPDATE_CRC_RESP_ID		=	(int)(0xFFFC);
+    final int UPDATE_REQUEST_ID	 =	(int)	(0xFFFF);
+    final int UPDATE_CRC_RESP_ID 	=(int) (0xFFFE);
 
     void update_sendUpdateReq()
     {
@@ -626,10 +660,10 @@ public class Update extends Activity {
     }
 
     Boolean getHw_version = false;
-    byte[][] Hw_version = new byte[2][64];
+    byte[][] Hw_version = new byte[6][64];
     int HW_index = 0;
-    int Hw_dataindex = 2;
-    public int DecodeData(byte[] decodedata,int datalen)
+    int Hw_dataindex = 6;
+    public int DecodeData(byte[] decodedata,byte datatype)
     {
         byte[] data = decodedata;
         receiveDataFlag = true;
@@ -649,21 +683,21 @@ public class Update extends Activity {
                 System.arraycopy(Hw_version[Hw_dataindex-1], 4, Hw_version[Hw_dataindex-1], 0,HW_index-7);
                 HW_index = 0;
                 Hw_dataindex --;
-                if(Hw_dataindex <=0)
-                {
-                    Hw_dataindex =2;
-                    //getHw_version = false;
-                    Log.i("版本信息接受完毕","版本信息接受完毕");
-                    sendMessage(30);
-//                    textView.setText(new String(Hw_version[0] ) +"\n"
-//                            +new String(Hw_version[1] ) +"\n");
-//                            +new String(Hw_version[2]) +"\n"
-//                            +new String(Hw_version[3]) +"\n"
-//                            +new String(Hw_version[4]) +"\n"
-//                            +new String(Hw_version[5]));
-                    getHw_version = false;
+//                if(Hw_dataindex <=0)
+//                {
+//                    Hw_dataindex =6;
+//                    //getHw_version = false;
+//                    Log.i("版本信息接受完毕","版本信息接受完毕");
+//                    sendMessage(30);
+////                    textView.setText(new String(Hw_version[0] ) +"\n"
+////                            +new String(Hw_version[1] ) +"\n");
+////                            +new String(Hw_version[2]) +"\n"
+////                            +new String(Hw_version[3]) +"\n"
+////                            +new String(Hw_version[4]) +"\n"
+////                            +new String(Hw_version[5]));
+//                    getHw_version = false;
 
-                }
+//                }
             }
 
         }else if(!getHw_version && data != null)
@@ -676,8 +710,8 @@ public class Update extends Activity {
     public int update_sendLen=0,filedataLen=0,updateIdex= 0;
     public long startTime=0,consumingTime=0;  //開始時間
 
-    final int UPDATE_REQUEST_ID	 =	(int)	(0xFFFF);
-    final int UPDATE_CRC_RESP_ID 	=(int) (0xFFFE);
+//    final int UPDATE_REQUEST_ID	 =	(int)	(0xFFFF);
+//    final int UPDATE_CRC_RESP_ID 	=(int) (0xFFFE);
 
     final byte UPDATE_REQUST_OK			=		(0x00);//升级请求被接受
     final byte UPDATE_REJECT_REASON_HW_ERR		=	(0x01);//硬件版本错误
@@ -972,14 +1006,14 @@ public class Update extends Activity {
                     && stringBuilder.toString().endsWith("2A ")){
 
                 //updateReceive_respons(data,data.length );
-                DecodeData(data,data.length);
+                DecodeData(data,(byte)0xD0);
 
             }
             else if (stringBuilder.toString().contains("53 01 ")
                     && stringBuilder.toString().startsWith("40")
                     && stringBuilder.toString().endsWith("2A ")) {
                 if (Util.checkCurrentNumber(stringBuilder.toString())) {
-                    DecodeData(data,data.length);
+                    DecodeData(data,(byte)0x01);
 //                    String ss = Util.getCurrentNumberString(stringBuilder
 //                            .toString());
 //                    stringBuilder.delete(0, stringBuilder.length());
@@ -1115,5 +1149,22 @@ public class Update extends Activity {
             e.printStackTrace();
         }
 //Toast.makeText(context,"揚聲器已經關閉",Toast.LENGTH_SHORT).show();
+    }
+
+    private long exitTime = 0;
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
+            if((System.currentTimeMillis()-exitTime) > 2000){
+                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
+            } else {
+                finish();
+                System.exit(0);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
