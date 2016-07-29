@@ -561,7 +561,7 @@ public class Update extends Activity {
         //发送升级请求，并等待回应
         //requestId = UPDATE_REQUEST_ID;
         //memcpy(&temp[len], &requestId, 2);
-        if(AESflag == false) {
+        if(!AESflag) {
             temp[len] = (byte) 0xFD;
             temp[len + 1] = (byte) 0xFF;
         }else if(AESflag){

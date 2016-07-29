@@ -311,7 +311,7 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_wavemak
 	right	= WAVE_SAMPLE_VAL_MAX;
 #endif
 	repeatCnt = WAVE_SAMPLE_REPEAT_CNT;//48			波形半周期采样点数
-	LOGI("开始转换");
+	//LOGI("开始转换");
 	for (i=0; i<samples_preCh*tWav_header.Channels;)//单通道ADC点数总和*双通道  i=采样点位置
 	{
 		/* 每个通道重复4个数据 */
@@ -354,9 +354,9 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_wavemak
 #else
 				/* 扫描触发命令 */
 				//data[0] = COMM_WAKEUP_START_BYTE;
-				LOGI("111111");
+				//LOGI("111111");
 				memcpy( &data[0], Bytes,  fileBytesLen);
-				LOGI("转换当前段");
+				//LOGI("转换当前段");
 //				for (int i = 0; i < 4; i++)
 //				{
 //					LOGI("string %X", data[i], 1024);//去字符串s%
