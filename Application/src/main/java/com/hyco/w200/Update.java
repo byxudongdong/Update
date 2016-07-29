@@ -112,6 +112,7 @@ public class Update extends Activity {
         Log.i("记录波形","记录波形");
     }
 
+    String filesname = "/20160729_image_W200_005.hyco";
     public void startButton(View v)
     {
 
@@ -120,7 +121,9 @@ public class Update extends Activity {
         Log.i("开始转换文件","开始转换文件");
         //读SD中的文件
         try{
-            String filePath = FilesOpt.getSdCardPath() + "/image_w200_20160726.hyc";
+            //String filePath = FilesOpt.getSdCardPath() + "/image_w200_20160726.hyc";
+            String filePath = FilesOpt.getSdCardPath() + filesname;
+
             try {
                 imageNum = myNative.update_fileParse(filePath.getBytes());
             }catch (Exception  e) {
@@ -185,7 +188,7 @@ public class Update extends Activity {
         {
             //读SD中的文件
             try{
-                String filePath = filesOpt.getSdCardPath() + "/image_w200_20160726.hyc";
+                String filePath = filesOpt.getSdCardPath() + filesname;
                 try {
                     imageNum = myNative.update_fileParse(filePath.getBytes());
                 }catch (Exception  e) {
@@ -528,10 +531,10 @@ public class Update extends Activity {
     byte	COMM_CMD_TYPE_TOUCH		=	(byte)0xDF;	//touch数据
     byte	COMM_CMD_TYPE_VERSION		=	(byte)(0xE0);	//R11版本信息
 
-    //final int UPDATE_REQUEST_ID		=	(int)(0xFFFD);
-    //final int UPDATE_CRC_RESP_ID		=	(int)(0xFFFC);
-    final int UPDATE_REQUEST_ID	 =	(int)	(0xFFFF);
-    final int UPDATE_CRC_RESP_ID 	=(int) (0xFFFE);
+    final int UPDATE_REQUEST_ID		=	(int)(0xFFFD);
+    final int UPDATE_CRC_RESP_ID		=	(int)(0xFFFC);
+//    final int UPDATE_REQUEST_ID	 =	(int)	(0xFFFF);
+//    final int UPDATE_CRC_RESP_ID 	=(int) (0xFFFE);
 
     void update_sendUpdateReq()
     {
@@ -539,14 +542,17 @@ public class Update extends Activity {
         int requestId;
         int len;
         //supportCipher = false;
-	/* 已发送数据大小 */
+	    /* 已发送数据大小 */
         update_sendSize = 0;
         len = 0;
         //发送升级请求，并等待回应
         //requestId = UPDATE_REQUEST_ID;
         //memcpy(&temp[len], &requestId, 2);
-        temp[len] = (byte)0xFF;
+//        temp[len] = (byte)0xFF;
+//        temp[len+1] = (byte)0xFF;
+        temp[len] = (byte)0xFD;
         temp[len+1] = (byte)0xFF;
+
         len += 2;
         //memcpy(&temp[len], &tUpdate_info.hw_info, 4);
         byte[] hwinfo = {0x01,0x01,0x01,0x02};
