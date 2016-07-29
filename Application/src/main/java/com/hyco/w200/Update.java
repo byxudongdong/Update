@@ -80,7 +80,7 @@ public class Update extends Activity {
         getHw_version = true;
         mRunnable.run();
         try {
-            Thread.currentThread().sleep(1500);
+            Thread.currentThread().sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -113,16 +113,31 @@ public class Update extends Activity {
     }
 
     String filesname = "/20160729_image_W200_005.hyco";
+    final int UPDATE_REQUEST_ID_hyco		=	(int)(0xFFFD);
+    final int UPDATE_CRC_RESP_ID_hyco		=	(int)(0xFFFC);
+
+    final int UPDATE_REQUEST_ID_hyc		=	(int)(0xFFFF);
+    final int UPDATE_CRC_RESP_ID_hyc		=	(int)(0xFFFE);
+    Boolean AESflag = true;
     public void startButton(View v)
     {
-
-        Log.i("生成WAV","生成WAV");
-
+        //Log.i("生成WAV","生成WAV");
         Log.i("开始转换文件","开始转换文件");
         //读SD中的文件
         try{
             //String filePath = FilesOpt.getSdCardPath() + "/image_w200_20160726.hyc";
             String filePath = FilesOpt.getSdCardPath() + filesname;
+            if(filePath.contains(".hyco"))
+            {
+                AESflag = false;
+//                UPDATE_REQUEST_ID		=	(int)(0xFFFD);
+//                UPDATE_CRC_RESP_ID	=	(int)(0xFFFC);
+
+            }else {
+                AESflag = true;
+//                UPDATE_REQUEST_ID	 =	(int)	(0xFFFF);
+//                UPDATE_CRC_RESP_ID 	=(int) (0xFFFE);
+            }
 
             try {
                 imageNum = myNative.update_fileParse(filePath.getBytes());
@@ -146,15 +161,15 @@ public class Update extends Activity {
                 Update_info.image_size,
                 Update_info.image_crc,
                 Update_info.image_data);
-        byte[] write_bytes = new byte[FilesOpt.byteArrayToInt(Update_info.image_size)];
-        System.arraycopy(Update_info.image_data,0,write_bytes,0,FilesOpt.byteArrayToInt(Update_info.image_size));
-
-        try {
-            FilesOpt.writeBytesSdcardFile( FilesOpt.getSdCardPath() + "/image_W200.bin", write_bytes);
-        } catch (IOException e) {
-            Log.i("解读文件失败","解读文件失败");
-            e.printStackTrace();
-        }
+//        byte[] write_bytes = new byte[FilesOpt.byteArrayToInt(Update_info.image_size)];
+//        System.arraycopy(Update_info.image_data,0,write_bytes,0,FilesOpt.byteArrayToInt(Update_info.image_size));
+//
+//        try {
+//            FilesOpt.writeBytesSdcardFile( FilesOpt.getSdCardPath() + "/image_W200.bin", write_bytes);
+//        } catch (IOException e) {
+//            Log.i("解读文件失败","解读文件失败");
+//            e.printStackTrace();
+//        }
         //FileToCRCUtil.main( FilesOpt.getSdCardPath() + "/image_W200.bin");  //耗时
         //AES.main();
         //myNative.wavemake(write_bytes);
@@ -263,9 +278,9 @@ public class Update extends Activity {
     int WriteComm(byte[] bytes,int length){
         int wavelen =0;
         byte[] wavedata = new byte[48000*2];
-        Log.d("转换元数据","转换元数据start");
+        //Log.d("转换元数据","转换元数据start");
         int count = myNative.wavemake(bytes,length,wavedata,wavelen);
-        Log.d("转换元数据","转换元数据ok");
+        //Log.d("转换元数据","转换元数据ok");
 //        writeDateTOFile(wavedata);//往文件中写入裸数据
 //        copyWaveFile(AudioName, NewAudioName);//给裸数据加上头文件
 //        Log.i("生成WAV","生成WAV");
@@ -531,10 +546,8 @@ public class Update extends Activity {
     byte	COMM_CMD_TYPE_TOUCH		=	(byte)0xDF;	//touch数据
     byte	COMM_CMD_TYPE_VERSION		=	(byte)(0xE0);	//R11版本信息
 
-    final int UPDATE_REQUEST_ID		=	(int)(0xFFFD);
-    final int UPDATE_CRC_RESP_ID		=	(int)(0xFFFC);
-//    final int UPDATE_REQUEST_ID	 =	(int)	(0xFFFF);
-//    final int UPDATE_CRC_RESP_ID 	=(int) (0xFFFE);
+//    int UPDATE_REQUEST_ID	 =	(int)	(0xFFFF);
+//    int UPDATE_CRC_RESP_ID 	=(int) (0xFFFE);
 
     void update_sendUpdateReq()
     {
@@ -548,10 +561,14 @@ public class Update extends Activity {
         //发送升级请求，并等待回应
         //requestId = UPDATE_REQUEST_ID;
         //memcpy(&temp[len], &requestId, 2);
-//        temp[len] = (byte)0xFF;
-//        temp[len+1] = (byte)0xFF;
-        temp[len] = (byte)0xFD;
-        temp[len+1] = (byte)0xFF;
+        if(AESflag == false) {
+            temp[len] = (byte) 0xFD;
+            temp[len + 1] = (byte) 0xFF;
+        }else if(AESflag){
+            temp[len] = (byte)0xFF;
+            temp[len+1] = (byte)0xFF;
+        }
+
 
         len += 2;
         //memcpy(&temp[len], &tUpdate_info.hw_info, 4);
@@ -749,7 +766,7 @@ public class Update extends Activity {
         offset += 2;
         switch (index)
         {
-            case UPDATE_REQUEST_ID:
+            case UPDATE_REQUEST_ID_hyc:
                 sendMessage(11);
                 Log.i("解析升级请求数据....","解析升级请求数据");
                 if (len > 3) ret = myNative.update_checkSetFlag(1);
@@ -823,7 +840,100 @@ public class Update extends Activity {
                         break;
                 }
                 break;
-            case UPDATE_CRC_RESP_ID:
+            case UPDATE_REQUEST_ID_hyco:
+                sendMessage(11);
+                Log.i("解析升级请求数据....","解析升级请求数据");
+                if (len > 3) ret = myNative.update_checkSetFlag(1);
+                else ret = myNative.update_checkSetFlag(0);
+                if (ret == 0)
+                {
+                    if (pdata[offset] == UPDATE_REJECT_REASON_HW_ERR)
+                    {
+				        /* 硬件版本错误 */
+                        sendMessage(12);
+                        Log.w("硬件版本错误....","重新发送升级请求");
+                        imageIndex++;
+                        if (imageIndex >= imageNum) imageIndex = 0;
+                    }
+                    ret = myNative.update_getImageInfo(imageIndex, Update_info.ppVer_Str,
+                            Update_info.hw_info,
+                            Update_info.image_size,
+                            Update_info.image_crc,
+                            Update_info.image_data);
+                    filedataLen = UpdateOpt.byteArrayToInt(Update_info.image_size);
+                    Log.i("更换升级文件：=",String.valueOf(imageIndex) +":" + String.valueOf(filedataLen));
+                    sendMessage(13);
+                    return;
+                }
+		        /* 接收升级请求回应 */
+                switch(pdata[offset])
+                {
+                    case UPDATE_REQUST_OK:
+			        /* 升级请求被接受 */
+                        Log.i("请求被接收....","请求被接收");
+                        sendMessage(14);
+                        try {
+                            Thread.currentThread().sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        update_step++;
+                        if (len > 3)
+                        {
+                            Log.i("芯片支持OAD....","芯片支持OAD");
+                            sendMessage(15);
+                            supportCipher = true;
+                        }
+                        else
+                        {
+                            Log.w("不支持OAD....","");
+                            textView.setText("不支持OAD....");
+                            supportCipher = false;
+                        }
+
+                        break;
+                    case UPDATE_REJECT_REASON_HW_ERR:
+			        /* 硬件版本错误 */
+                        Log.w("硬件版本错误....","硬件版本错误");
+                        sendMessage(16);
+                        imageIndex++;
+                        if (imageIndex >= imageNum) imageIndex = 0;
+                        ret = myNative.update_getImageInfo(imageIndex,Update_info.ppVer_Str,
+                                Update_info.hw_info,
+                                Update_info.image_size,
+                                Update_info.image_crc,
+                                Update_info.image_data);
+                        filedataLen = UpdateOpt.byteArrayToInt(Update_info.image_size);
+                        Log.i("更换升级文件：=",String.valueOf(imageIndex) +":" + String.valueOf(filedataLen));
+                        break;
+                    case UPDATE_REJECT_REASON_SIZE_ERR:
+			        /* 升级包大小错误(超过限制) */
+                        Log.w("升级包大小错误(超过限制)","超过限制");
+                        sendMessage(17);
+                        break;
+                }
+                break;
+            case UPDATE_CRC_RESP_ID_hyc:
+		    /* 收到CRC校验回应 */
+                if (pdata[offset] == 0)
+                {
+			        /* CRC校验正确 */
+                    //mySetRecvInfo("CRC校验正确");
+                    Log.i("CRC校验正确","CRC校验正确");
+                    update_step = UPDATE_STEP_CRC_RES_RECV;
+                }
+                else
+                {
+			        /* 校验值错误，重发升级请求，重新升级 */
+                    Log.w("校验值错误，重发升级请求，重新升级","校验值错误");
+                    sendMessage(18);
+                    update_step = UPDATE_STEP_SEND_REQUEST;
+                    update_sendSize = 0;
+
+                }
+                break;
+            case UPDATE_CRC_RESP_ID_hyco:
 		    /* 收到CRC校验回应 */
                 if (pdata[offset] == 0)
                 {

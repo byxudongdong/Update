@@ -1,4 +1,4 @@
-    package com.example.android.bluetoothlegatt;
+package com.example.android.bluetoothlegatt;
 
 import java.nio.MappedByteBuffer;
 import java.util.Map;

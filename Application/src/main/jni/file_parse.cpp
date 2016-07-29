@@ -72,6 +72,7 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_update_
 	fp = fopen(fileName, "rb");
 	if (fp == NULL) {
 		/* 文件打开错误 */
+		LOGI("文件打开错误");
 		return -1;
 	}
 	fread(&headerBuf[0], 1024, 1, fp);
