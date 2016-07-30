@@ -1,6 +1,7 @@
 package com.hyco.w200;
 
 import android.app.Activity;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioFormat;
@@ -11,6 +12,7 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Vibrator;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -77,6 +79,10 @@ public class Update extends Activity {
     }
 
     public void versioninfo(View v){
+
+        Vibrator vibrator=(Vibrator)getSystemService(Service.VIBRATOR_SERVICE);
+        vibrator.vibrate(new long[]{0,1000}, -1);
+
         getHw_version = true;
         mRunnable.run();
         try {
@@ -121,6 +127,9 @@ public class Update extends Activity {
     Boolean AESflag = true;
     public void startButton(View v)
     {
+        Vibrator vibrator=(Vibrator)getSystemService(Service.VIBRATOR_SERVICE);
+        vibrator.vibrate(new long[]{0,1000}, -1);
+
         //Log.i("生成WAV","生成WAV");
         Log.i("开始转换文件","开始转换文件");
         //读SD中的文件

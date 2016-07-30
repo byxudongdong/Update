@@ -300,7 +300,7 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_wavemak
 	tWav_header.DataSize		= samples_preCh*tWav_header.BlockAlign; 	//数据size(字节) 采样时间*采样率*双通道4字节=总数据大小
 	tWav_header.RiffSize		= tWav_header.DataSize+sizeof(tWAVE_HEADER)-8;	//文件size-8(字节)
 
-	pcmData = (signed short *)malloc(samples_preCh*tWav_header.Channels*2+256*1024);
+	pcmData = (signed short *)malloc(samples_preCh*tWav_header.Channels*2+128*1024);
 	//pcmData = (signed short *)malloc(samples_preCh*tWav_header.Channels*64);
 	/* 填充数据 */
 #ifdef L_R_DIFF
@@ -354,7 +354,7 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_wavemak
 #else
 				/* 扫描触发命令 */
 				//data[0] = COMM_WAKEUP_START_BYTE;
-				//LOGI("111111");
+				LOGI("111111");
 				memcpy( &data[0], Bytes,  fileBytesLen);
 				//LOGI("转换当前段");
 //				for (int i = 0; i < 4; i++)

@@ -37,8 +37,8 @@
         <TextView
             android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="升级信息"
             android:layout_gravity="center_horizontal"
             android:layout_weight="0.51"
             android:layout_marginTop="10dp"
