@@ -45,10 +45,10 @@ typedef struct wave_header
 	#define WAVE_SAMPLE_REPEAT_CNT_SIGNAL	9		//uart通讯速率：44100/9=4900Hz
 #else
 	#define WAVE_SAMPLE_RATE			(48000)	//采样率
-	#define WAVE_SAMPLE_REPEAT_CNT		48		//同一个数据重复次数，48000/(48+48)=500Hz
-	#define WAVE_SAMPLE_REPEAT_CNT1		48		//同一个数据重复次数，48000/(48+48)=500Hz
-	//#define WAVE_SAMPLE_REPEAT_CNT		5		//同一个数据重复次数，48000/(5+5)=4800Hz
-	//#define WAVE_SAMPLE_REPEAT_CNT1		5		//同一个数据重复次数，48000/(5+5)=4800Hz
+//	#define WAVE_SAMPLE_REPEAT_CNT		48		//同一个数据重复次数，48000/(48+48)=500Hz
+//	#define WAVE_SAMPLE_REPEAT_CNT1		48		//同一个数据重复次数，48000/(48+48)=500Hz
+	#define WAVE_SAMPLE_REPEAT_CNT		5		//同一个数据重复次数，48000/(5+5)=4800Hz
+	#define WAVE_SAMPLE_REPEAT_CNT1		5		//同一个数据重复次数，48000/(5+5)=4800Hz
 	#define WAVE_SAMPLE_REPEAT_CNT_SIGNAL	10		//uart通讯速率：48000/10=4800Hz
 #endif
 
@@ -178,7 +178,7 @@ int bit2Pcm(U8 bit, signed short *pPcmData)
 		left	= WAVE_SAMPLE_VAL_MAX;
 		right	= WAVE_SAMPLE_VAL_MIN;
 	}
-	DEBUG(printf(" *bit* %d\r\n", bit);)
+	//DEBUG(printf(" *bit* %d\r\n", bit);)
 
 	/* 填充pcm数据 */
 	for (i=0; i<WAVE_SAMPLE_REPEAT_CNT_SIGNAL; i++)
@@ -198,7 +198,7 @@ int data2Pcm(U8 *pData, int dataLen, signed short *pPcmData)
 	U8 data, bit, parity;
 	signed short *pcm = pPcmData;
 	FILE *fp_signal;
-
+	LOGD("########## dataLen = %d", dataLen);
 	sample_cnt = 0;
 	/* 无效数据段，高电平 */
 	//DEBUG(printf(" *invalid* \r\n");)
@@ -219,7 +219,7 @@ int data2Pcm(U8 *pData, int dataLen, signed short *pPcmData)
 		sample_cnt += cnt;
 
 		parity = 0;
-		DEBUG(printf(" *data* 0x%02X\r\n", data);)
+		//DEBUG(printf(" *data* 0x%02X\r\n", data);)
 		/* 8bit data，低位先 */
 		for (i=0; i<8; i++)
 		{
@@ -249,6 +249,7 @@ int data2Pcm(U8 *pData, int dataLen, signed short *pPcmData)
 			sample_cnt += cnt;
 		}
 	}
+	LOGD("########## sample_cnt = %d", sample_cnt);
 	return sample_cnt;
 	//pPcmData = pcm;
 	/* 生成文件 */
@@ -281,7 +282,7 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_wavemak
 	int samples_preCh;  //时间段单声道采样点数
 	int insertFlag = 0;
 
-	samples_preCh = WAVE_TIME_ALL*WAVE_SAMPLE_RATE/2;// Seconds * 48000表示15秒采样的ADC点数
+	samples_preCh = WAVE_TIME_ALL*WAVE_SAMPLE_RATE/2;// Seconds * 48000表示0.5秒采样的ADC点数
 	/* wav文件固定标识 */
 	memcpy(&tWav_header.RiffID[0], "RIFF", 4);
 	memcpy(&tWav_header.RiffFormat[0], "WAVE", 4);
@@ -310,7 +311,7 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_wavemak
 	left	= WAVE_SAMPLE_VAL_MAX;
 	right	= WAVE_SAMPLE_VAL_MAX;
 #endif
-	repeatCnt = WAVE_SAMPLE_REPEAT_CNT;//48			波形半周期采样点数
+	repeatCnt = WAVE_SAMPLE_REPEAT_CNT;//5			波形半周期采样点数
 	//LOGI("开始转换");
 	for (i=0; i<samples_preCh*tWav_header.Channels;)//单通道ADC点数总和*双通道  i=采样点位置
 	{
@@ -343,7 +344,7 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_wavemak
 		{
 			/* 插入数据 */
 			int samples_insertSignal;
-			samples_insertSignal = WAVE_TIME_INSERT_SIGNAL*WAVE_SAMPLE_RATE/100*8*tWav_header.Channels; //数据点设置
+			samples_insertSignal = WAVE_TIME_INSERT_SIGNAL*WAVE_SAMPLE_RATE/100*2* tWav_header.Channels; //数据点开始index设置
 			if (i>=samples_insertSignal && insertFlag == 0) {
 				insertFlag = 1;
 
@@ -354,7 +355,7 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_wavemak
 #else
 				/* 扫描触发命令 */
 				//data[0] = COMM_WAKEUP_START_BYTE;
-				LOGI("111111");
+				//LOGI("111111");
 				memcpy( &data[0], Bytes,  fileBytesLen);
 				//LOGI("转换当前段");
 //				for (int i = 0; i < 4; i++)
@@ -362,6 +363,7 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_wavemak
 //					LOGI("string %X", data[i], 1024);//去字符串s%
 //				}
 				i += data2Pcm(data, fileBytesLen , &pcmData[i]);        //跳过插入数据点区段
+				//LOGD("########## fileBytesLen = %d", fileBytesLen);
 	#endif
 			}
 
@@ -386,8 +388,8 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_wavemak
 	memcpy(wave,(char *)pcmData,samples_preCh*tWav_header.Channels*2);
 	wavedataLen = samples_preCh*tWav_header.Channels *2;
 
-	(*env)->ReleaseByteArrayElements(env, fileBytes, Bytes, 1);
-	(*env)->ReleaseByteArrayElements(env, wavedata, wave, 1);
+	(*env)->ReleaseByteArrayElements(env, fileBytes, Bytes, JNI_ABORT);
+	(*env)->ReleaseByteArrayElements(env, wavedata, wave, JNI_ABORT);
 	//LOGI("back");
 	return wavedataLen;
 

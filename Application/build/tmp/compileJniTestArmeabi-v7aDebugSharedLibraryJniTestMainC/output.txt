@@ -1,15 +1,15 @@
 See file:///H:/NewProj/W200Update/Application/build/tmp/compileJniTestArmeabi-v7aDebugSharedLibraryJniTestMainC/output.txt for all output for compileJniTestArmeabi-v7aDebugSharedLibraryJniTestMainC.
 compiling wavemake.c successful.
-H:\NewProj\W200Update\Application\src\main\jni\wavemake.c:389:51: warning: passing 'char *' to parameter of type 'jbyte *' (aka 'signed char *') converts between pointers to integer types with different sign [-Wpointer-sign]
-        (*env)->ReleaseByteArrayElements(env, fileBytes, Bytes, 1);
+H:\NewProj\W200Update\Application\src\main\jni\wavemake.c:391:51: warning: passing 'char *' to parameter of type 'jbyte *' (aka 'signed char *') converts between pointers to integer types with different sign [-Wpointer-sign]
+        (*env)->ReleaseByteArrayElements(env, fileBytes, Bytes, JNI_ABORT);
                                                          ^~~~~
-H:\NewProj\W200Update\Application\src\main\jni\wavemake.c:390:50: warning: passing 'char *' to parameter of type 'jbyte *' (aka 'signed char *') converts between pointers to integer types with different sign [-Wpointer-sign]
-        (*env)->ReleaseByteArrayElements(env, wavedata, wave, 1);
+H:\NewProj\W200Update\Application\src\main\jni\wavemake.c:392:50: warning: passing 'char *' to parameter of type 'jbyte *' (aka 'signed char *') converts between pointers to integer types with different sign [-Wpointer-sign]
+        (*env)->ReleaseByteArrayElements(env, wavedata, wave, JNI_ABORT);
                                                         ^~~~
-H:\NewProj\W200Update\Application\src\main\jni\wavemake.c:424:51: warning: passing 'char *' to parameter of type 'jbyte *' (aka 'signed char *') converts between pointers to integer types with different sign [-Wpointer-sign]
+H:\NewProj\W200Update\Application\src\main\jni\wavemake.c:426:51: warning: passing 'char *' to parameter of type 'jbyte *' (aka 'signed char *') converts between pointers to integer types with different sign [-Wpointer-sign]
         (*env)->ReleaseByteArrayElements(env, fileBytes, Bytes, 0);
                                                          ^~~~~
-H:\NewProj\W200Update\Application\src\main\jni\wavemake.c:425:50: warning: passing 'char *' to parameter of type 'jbyte *' (aka 'signed char *') converts between pointers to integer types with different sign [-Wpointer-sign]
+H:\NewProj\W200Update\Application\src\main\jni\wavemake.c:427:50: warning: passing 'char *' to parameter of type 'jbyte *' (aka 'signed char *') converts between pointers to integer types with different sign [-Wpointer-sign]
         (*env)->ReleaseByteArrayElements(env, wavedata, wave, 0);
                                                         ^~~~
 4 warnings generated.

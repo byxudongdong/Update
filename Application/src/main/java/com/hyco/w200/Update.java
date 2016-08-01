@@ -118,7 +118,7 @@ public class Update extends Activity {
         Log.i("记录波形","记录波形");
     }
 
-    String filesname = "/Download/20160729_image_W200_005.hyco";
+    String filesname = "/Download/image_W200.hyc";
     final int UPDATE_REQUEST_ID_hyco		=	(int)(0xFFFD);
     final int UPDATE_CRC_RESP_ID_hyco		=	(int)(0xFFFC);
 

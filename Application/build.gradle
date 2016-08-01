@@ -11,7 +11,7 @@ model {
             targetSdkVersion.apiLevel = 20
         }
         ndk {
-            platformVersion = 20
+            platformVersion = 23
             moduleName = 'JniTest'
             toolchain = 'clang'
             stl "stlport_static"

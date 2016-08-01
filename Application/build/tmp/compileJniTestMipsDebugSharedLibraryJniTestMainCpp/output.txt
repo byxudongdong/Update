@@ -3,6 +3,10 @@ compiling aesEnDecode.cpp successful.
 clang++.exe: warning: optimization flag '-finline-functions' is not supported
 clang++.exe: warning: argument unused during compilation: '-finline-functions'
 
+compiling comm.cpp successful.
+clang++.exe: warning: optimization flag '-finline-functions' is not supported
+clang++.exe: warning: argument unused during compilation: '-finline-functions'
+
 compiling MediaRecorderTest.cpp successful.
 clang++.exe: warning: optimization flag '-finline-functions' is not supported
 clang++.exe: warning: argument unused during compilation: '-finline-functions'
@@ -11,14 +15,10 @@ H:\NewProj\W200Update\Application\src\main\jni\MediaRecorderTest.cpp:54:1: warni
 ^
 1 warning generated.
 
-compiling comm.cpp successful.
-clang++.exe: warning: optimization flag '-finline-functions' is not supported
-clang++.exe: warning: argument unused during compilation: '-finline-functions'
-
 compiling file_parse.cpp successful.
 clang++.exe: warning: optimization flag '-finline-functions' is not supported
 clang++.exe: warning: argument unused during compilation: '-finline-functions'
-H:\NewProj\W200Update\Application\src\main\jni\file_parse.cpp:340:20: warning: conversion from string literal to 'char *' is deprecated [-Wc++11-compat-deprecated-writable-strings]
+H:\NewProj\W200Update\Application\src\main\jni\file_parse.cpp:345:20: warning: conversion from string literal to 'char *' is deprecated [-Wc++11-compat-deprecated-writable-strings]
         char* classname = "com/example/android/bluetoothlegatt/MyNative";
                           ^
 1 warning generated.
