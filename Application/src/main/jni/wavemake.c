@@ -388,8 +388,8 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_wavemak
 	memcpy(wave,(char *)pcmData,samples_preCh*tWav_header.Channels*2);
 	wavedataLen = samples_preCh*tWav_header.Channels *2;
 
-	(*env)->ReleaseByteArrayElements(env, fileBytes, Bytes, JNI_ABORT);
-	(*env)->ReleaseByteArrayElements(env, wavedata, wave, JNI_ABORT);
+	(*env)->ReleaseByteArrayElements(env, fileBytes, Bytes, 1);
+	(*env)->ReleaseByteArrayElements(env, wavedata, wave, 1);
 	//LOGI("back");
 	return wavedataLen;
 
