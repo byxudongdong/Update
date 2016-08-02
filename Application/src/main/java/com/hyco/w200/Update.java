@@ -33,6 +33,7 @@ import java.io.IOException;
 
 public class Update extends Activity {
 
+    private long time1 = 0;
     Thread mthread;
     private TextView mDataField;
     private TextView textView;
@@ -256,7 +257,13 @@ public class Update extends Activity {
                         }
                     }
                     //Log.i("升级流程切换：", "wait...");
+
                     update_step = update_Switch();
+                    try {
+                        Thread.currentThread().sleep(1);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
                     if (update_step == 5) {
                         //升级完成后
@@ -293,7 +300,10 @@ public class Update extends Activity {
 //        writeDateTOFile(wavedata);//往文件中写入裸数据
 //        copyWaveFile(AudioName, NewAudioName);//给裸数据加上头文件
 //        Log.i("生成WAV","生成WAV");
+//        long time1 = System.currentTimeMillis();  //開始時間
         start_scan(wavedata);
+//        time1 = System.currentTimeMillis() - time1;
+//        Log.w("耗时:",String.valueOf(time1));
         return 0;
     }
 
@@ -375,18 +385,18 @@ public class Update extends Activity {
                 sendMessage( 2 );
                 receiveDataFlag = false;
                 //while(!receiveDataFlag)
-            {
-                update_sendUpdateReq();
-//                try {
-//                    Thread.currentThread().sleep(1);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-            }
-            update_sendSize = 0;
-            update_step++;
-            startTime = System.currentTimeMillis();  //開始時間
-            break;
+                {
+                    update_sendUpdateReq();
+    //                try {
+    //                    Thread.currentThread().sleep(1);
+    //                } catch (InterruptedException e) {
+    //                    e.printStackTrace();
+    //                }
+                }
+                update_sendSize = 0;
+                update_step++;
+                startTime = System.currentTimeMillis();  //開始時間
+                break;
             case UPDATE_STEP_SEND_IMAGE:
                 Log.i("发送升级文件：", "发送升级文件"+String.valueOf(update_sendSize)
                         + ":"+String.valueOf(filedataLen) );
@@ -396,7 +406,11 @@ public class Update extends Activity {
                     update_step = UPDATE_STEP_WAIT_CRC_RES;
                     break;
                 }
+
+                //Log.w("耗时:", "发送数据前");
+
                 update_sendLen = update_sendImageData();
+                //Log.w("耗时:", "发送数据后");
                 if( update_sendLen < 1 ) {
                     startTime = System.currentTimeMillis();  //開始時間
                     update_step = UPDATE_STEP_WAIT_CRC_RES;
@@ -416,8 +430,13 @@ public class Update extends Activity {
                 break;
             case UPDATE_STEP_WAIT_IMAGE_RES:
                 /* 等待升级请求和升级数据回应 */
+//                try {
+//                    Thread.currentThread().sleep(20);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
                 consumingTime = System.currentTimeMillis();
-                if ((consumingTime - startTime) >= 800)
+                if ((consumingTime - startTime) >= 400)
                 {
 			        /* 超时重发 */
                     Log.i("发送升级文件：", "超时重发");
@@ -441,7 +460,8 @@ public class Update extends Activity {
                 sendMessage(22);
                 //升级成功
                 break;
-
+            default:
+                break;
         }
         return update_step;
     }
@@ -1027,13 +1047,11 @@ public class Update extends Activity {
      * 播放指令数据
      */
     public void start_scan(byte[] byte_damo) {
-
         try {
-            trackplayer.write(byte_damo, 0, byte_damo.length);// 往track中写数据
+            trackplayer.write(byte_damo, 0, 42000*2);// 往track中写数据
         } catch (Exception e) {
             PlayAudioThread.interrupt();
         }
-
     }
 
     private AudioRecord audioRecord = null;
@@ -1059,7 +1077,7 @@ public class Update extends Activity {
      */
     public void createAudioRecord() {
         recBufSize = AudioRecord.getMinBufferSize(frequency,
-                channelConfiguration, EncodingBitRate);
+                channelConfiguration, EncodingBitRate)/8;
         audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, frequency,
                 channelConfiguration, EncodingBitRate, recBufSize);
         System.out.println("AudioRecord成功");
@@ -1073,7 +1091,12 @@ public class Update extends Activity {
         byte data[] = new byte[recBufSize];
         int read = 0;
         while (true) {
+
+            //time1 = System.currentTimeMillis();  //開始時間
             read = audioRecord.read(data, 0, recBufSize);
+            //time1 = System.currentTimeMillis() - time1;
+            //Log.w("耗时:",String.valueOf(time1));
+
             if (AudioRecord.ERROR_INVALID_OPERATION != read) {
                 if (isRecord == true) {
                     try {
@@ -1096,9 +1119,9 @@ public class Update extends Activity {
     private String code_msg = "";
     public void simple_c2java(byte[] byte_source) {
         code_data = new byte[320];
-        //Log.d("解析波形","解析波形start");
+        //Log.e("解析波形","解析波形start");
         s = myNative.cToJava(byte_source, byte_source.length, code_data);
-        //Log.d("解析波形","解析波形ok");
+        //Log.e("解析波形","解析波形ok");
         if (s > 0) {
             byte[] send_data = new byte[s];
             System.arraycopy(code_data, 0, send_data, 0, s);
@@ -1115,6 +1138,7 @@ public class Update extends Activity {
      * @param flag
      * @return
      */
+    Boolean timecountflag = false;
     public boolean insert_detect_success_flag = false;//能否收到w200数据
     public boolean responses_detect_Data_flag = false;// 设备确认
     private int reversePolarity = -1;
@@ -1124,13 +1148,14 @@ public class Update extends Activity {
             for (byte byteChar : data)
                 stringBuilder.append(String.format("%02X ", byteChar));//表示以十六进制形式输出,02表示不足两位，前面补0输出；出过两位，不影响
             uistring = stringBuilder.toString();
-            Log.w("数据解析结果", stringBuilder.toString() +"////" + reversePolarity);
+            Log.w("解析结果", stringBuilder.toString() +"////" + reversePolarity);
             sendMessage(10);
             if(stringBuilder.toString().contains("52 D0 ")
                     && stringBuilder.toString().startsWith("40")
                     && stringBuilder.toString().endsWith("2A ")){
 
                 //updateReceive_respons(data,data.length );
+                //Log.w("耗时:", "收到回应");
                 DecodeData(data,(byte)0xD0);
 
             }

@@ -198,7 +198,7 @@ int data2Pcm(U8 *pData, int dataLen, signed short *pPcmData)
 	U8 data, bit, parity;
 	signed short *pcm = pPcmData;
 	FILE *fp_signal;
-	LOGD("########## dataLen = %d", dataLen);
+	//LOGD("########## dataLen = %d", dataLen);
 	sample_cnt = 0;
 	/* 无效数据段，高电平 */
 	//DEBUG(printf(" *invalid* \r\n");)
@@ -249,7 +249,7 @@ int data2Pcm(U8 *pData, int dataLen, signed short *pPcmData)
 			sample_cnt += cnt;
 		}
 	}
-	LOGD("########## sample_cnt = %d", sample_cnt);
+	//LOGD("########## sample_cnt = %d", sample_cnt);
 	return sample_cnt;
 	//pPcmData = pcm;
 	/* 生成文件 */
@@ -344,7 +344,7 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_wavemak
 		{
 			/* 插入数据 */
 			int samples_insertSignal;
-			samples_insertSignal = WAVE_TIME_INSERT_SIGNAL*WAVE_SAMPLE_RATE/100*2* tWav_header.Channels; //数据点开始index设置
+			samples_insertSignal = WAVE_TIME_INSERT_SIGNAL*WAVE_SAMPLE_RATE/100*3* tWav_header.Channels; //数据点开始index设置
 			if (i>=samples_insertSignal && insertFlag == 0) {
 				insertFlag = 1;
 
@@ -388,8 +388,8 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_wavemak
 	memcpy(wave,(char *)pcmData,samples_preCh*tWav_header.Channels*2);
 	wavedataLen = samples_preCh*tWav_header.Channels *2;
 
-	(*env)->ReleaseByteArrayElements(env, fileBytes, Bytes, 1);
-	(*env)->ReleaseByteArrayElements(env, wavedata, wave, 1);
+	(*env)->ReleaseByteArrayElements(env, fileBytes, Bytes, 0);
+	(*env)->ReleaseByteArrayElements(env, wavedata, wave, 0);
 	//LOGI("back");
 	return wavedataLen;
 
