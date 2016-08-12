@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -76,6 +77,12 @@ public class Update extends Activity {
         tb1.setOnCheckedChangeListener(listener);
         tb2.setOnCheckedChangeListener(listener);
 
+        LinearLayout myLayout = (LinearLayout) findViewById ( R.id.root) ; // myLayout是我这个activity的界面的root layout
+        LinearLayout zheng1 = (LinearLayout) findViewById(R.id.zheng1) ;
+        LinearLayout zheng2 = (LinearLayout) findViewById(R.id.zheng2) ;
+        myLayout.removeView(zheng1);
+        myLayout.removeView(zheng2);
+
         vibrator=(Vibrator) getApplication().getSystemService(Service.VIBRATOR_SERVICE);
 
         start_play();
@@ -95,8 +102,9 @@ public class Update extends Activity {
 
     public void versioninfo(View v){
 
-        vibrator.vibrate(new long[] {800,40,400,30},2);
-
+        audioRecord.stop();
+        vibrator.vibrate(new long[]{50,50,50,100,50}, -1);
+        audioRecord.startRecording();
 
         getHw_version = true;
         mRunnable.run();
@@ -119,7 +127,6 @@ public class Update extends Activity {
 //                            +new String(Hw_version[3]) +"\n"
 //                            +new String(Hw_version[4]) +"\n"
 //                            +new String(Hw_version[5]));
-
         }
     }
 
