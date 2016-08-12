@@ -19,8 +19,10 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.example.android.bluetoothlegatt.*;
 import com.hyco.w200.R;
@@ -48,6 +50,9 @@ public class Update extends Activity {
     int audioCurrentVolumn;// 当前音量
 
     FileOutputStream fos = null;
+    private Vibrator vibrator = null;
+    private ToggleButton tb1=null, tb2=null;
+    private TextView tv1=null, tv2=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,25 +69,34 @@ public class Update extends Activity {
         audioMaxVolumn = am.getStreamMaxVolume(AudioTrack_Manager);
         audioCurrentVolumn = am.getStreamVolume(AudioTrack_Manager);
 
-        start_play();
-        startRecord();
+        tv1=(TextView)findViewById(R.id.tv1);
+        tv2=(TextView)findViewById(R.id.tv2);
+        tb1=(ToggleButton)findViewById(R.id.tb1);
+        tb2=(ToggleButton)findViewById(R.id.tb2);
+        tb1.setOnCheckedChangeListener(listener);
+        tb2.setOnCheckedChangeListener(listener);
 
-        try {
-            File file = new File(AudioName);
-            if (file.exists()) {
-                file.delete();
-            }
-            fos = new FileOutputStream(file);// 建立一个可存取字节的文件
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        vibrator=(Vibrator) getApplication().getSystemService(Service.VIBRATOR_SERVICE);
+
+        start_play();
+        startRecord();      //录音和震动冲突
+
+//        try {
+//            File file = new File(AudioName);
+//            if (file.exists()) {
+//                file.delete();
+//            }
+//            fos = new FileOutputStream(file);// 建立一个可存取字节的文件
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
     }
 
     public void versioninfo(View v){
 
-        Vibrator vibrator=(Vibrator)getSystemService(Service.VIBRATOR_SERVICE);
-        vibrator.vibrate(new long[]{0,1000}, -1);
+        vibrator.vibrate(new long[] {800,40,400,30},2);
+
 
         getHw_version = true;
         mRunnable.run();
@@ -96,7 +110,9 @@ public class Update extends Activity {
             getHw_version = false;
             //getHw_version = false;
             Log.i("版本信息接受完毕", "版本信息接受完毕");
+            //vibrator.vibrate(new long[] {800,40,400,30},0);
             sendMessage(30);
+            vibrator.cancel();
 //                    textView.setText(new String(Hw_version[0] ) +"\n"
 //                            +new String(Hw_version[1] ) +"\n");
 //                            +new String(Hw_version[2]) +"\n"
@@ -106,6 +122,39 @@ public class Update extends Activity {
 
         }
     }
+
+    CompoundButton.OnCheckedChangeListener listener=new CompoundButton.OnCheckedChangeListener(){
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            ToggleButton toggleButton=(ToggleButton)buttonView;
+            switch (toggleButton.getId()) {
+                case R.id.tb1:
+                    if(isChecked){
+                        //根据指定的模式进行震动
+                        //第一个参数：该数组中第一个元素是等待多长的时间才启动震动，
+                        //之后将会是开启和关闭震动的持续时间，单位为毫秒
+                        //第二个参数：重复震动时在pattern中的索引，如果设置为-1则表示不重复震动
+                        vibrator.vibrate(new long[]{1000,50,50,100,50}, -1);
+                        tv1.setText("振动已启动");
+                    }else {
+                        //关闭震动
+                        vibrator.cancel();
+                        tv1.setText("震动已关闭");
+                    }
+                    break;
+                case R.id.tb2:
+                    if(isChecked){
+                        //启动震动，并持续指定的时间
+                        vibrator.vibrate(3500);
+                        tv2.setText("振动已启动");
+                    }else {
+                        //关闭启动
+                        vibrator.cancel();
+                        tv2.setText("震动已关闭");
+                    }
+                    break;
+            }
+        }
+    };
 
     public void recordwav(View v)
     {
@@ -119,7 +168,7 @@ public class Update extends Activity {
         Log.i("记录波形","记录波形");
     }
 
-    String filesname = "/Download/image_W200.hyc";
+    String filesname = "/Downloads/image_W200.hyc";
     final int UPDATE_REQUEST_ID_hyco		=	(int)(0xFFFD);
     final int UPDATE_CRC_RESP_ID_hyco		=	(int)(0xFFFC);
 
@@ -402,7 +451,7 @@ public class Update extends Activity {
                         + ":"+String.valueOf(filedataLen) );
                 sendMessage( 3 );
                 /* 发送升级数据 */
-                if( update_sendSize >= filedataLen) {
+                if( update_sendSize >= filedataLen && filedataLen>100) {
                     update_step = UPDATE_STEP_WAIT_CRC_RES;
                     break;
                 }
@@ -483,6 +532,7 @@ public class Update extends Activity {
             switch(msg.what){
                 case 0:
                     update_step = 0;
+                    filedataLen = 0;
                     //getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                     textView.setText("CRC校验完成，升级成功...");
                     Toast.makeText(getApplicationContext(), "升级成功！！！", Toast.LENGTH_LONG).show();
@@ -540,6 +590,8 @@ public class Update extends Activity {
                     textView.setText("数据包发送完成，等待CRC校验结果...");
                     break;
                 case 22:
+                    update_step = 0;
+                    filedataLen = 0;
                     textView.setText("CRC校验完成，升级成功...");
                     break;
                 case 30:
@@ -1077,7 +1129,7 @@ public class Update extends Activity {
      */
     public void createAudioRecord() {
         recBufSize = AudioRecord.getMinBufferSize(frequency,
-                channelConfiguration, EncodingBitRate)/8;
+                channelConfiguration, EncodingBitRate)/2;
         audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, frequency,
                 channelConfiguration, EncodingBitRate, recBufSize);
         System.out.println("AudioRecord成功");
@@ -1095,7 +1147,7 @@ public class Update extends Activity {
             //time1 = System.currentTimeMillis();  //開始時間
             read = audioRecord.read(data, 0, recBufSize);
             //time1 = System.currentTimeMillis() - time1;
-            //Log.w("耗时:",String.valueOf(time1));
+            //Log.w("耗时:",String.valueOf(time1) +":size:"  + String.valueOf(read));
 
             if (AudioRecord.ERROR_INVALID_OPERATION != read) {
                 if (isRecord == true) {

@@ -71,6 +71,37 @@
             android:onClick="recordwav"
             android:layout_gravity="center_horizontal"/>
 
+        <LinearLayout android:orientation="horizontal"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content">
+            <ToggleButton android:id="@+id/tb1"
+                          android:textOn="关闭振动"
+                          android:textOff="启动振动"
+                          android:checked="false"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content" />
+            <TextView android:id="@+id/tv1"
+                      android:text="振动已关闭"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout android:orientation="horizontal"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content">
+            <ToggleButton android:id="@+id/tb2"
+                          android:textOn="关闭振动"
+                          android:textOff="启动振动"
+                          android:checked="false"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content" />
+            <TextView android:id="@+id/tv2"
+                      android:text="振动已关闭"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content" />
+        </LinearLayout>
+
     </LinearLayout>
+
 
 </ScrollView>
