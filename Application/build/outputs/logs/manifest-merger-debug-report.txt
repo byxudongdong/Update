@@ -23,6 +23,10 @@ uses-permission#android.permission.RECORD_AUDIO
 ADDED from H:\NewProj\W200Update\Application\src\main\AndroidManifest.xml:23:5-70
 	android:name
 		ADDED from H:\NewProj\W200Update\Application\src\main\AndroidManifest.xml:23:22-68
+uses-permission#android.permission.INTERNET
+ADDED from H:\NewProj\W200Update\Application\src\main\AndroidManifest.xml:25:5-66
+	android:name
+		ADDED from H:\NewProj\W200Update\Application\src\main\AndroidManifest.xml:25:22-64
 uses-permission#android.permission.MOUNT_UNMOUNT_FILESYSTEMS
 ADDED from H:\NewProj\W200Update\Application\src\main\AndroidManifest.xml:30:5-83
 	android:name

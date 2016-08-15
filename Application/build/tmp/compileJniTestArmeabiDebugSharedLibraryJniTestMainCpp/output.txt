@@ -9,6 +9,8 @@ H:\NewProj\W200Update\Application\src\main\jni\MediaRecorderTest.cpp:54:1: warni
 
 compiling comm.cpp successful.
 
+compiling AES.cpp successful.
+
 compiling AESENC.cpp successful.
 
 compiling file_parse.cpp successful.
@@ -16,7 +18,5 @@ H:\NewProj\W200Update\Application\src\main\jni\file_parse.cpp:345:20: warning: c
         char* classname = "com/example/android/bluetoothlegatt/MyNative";
                           ^
 1 warning generated.
-
-compiling AES.cpp successful.
 
 Finished compileJniTestArmeabiDebugSharedLibraryJniTestMainCpp, see full log file:///H:/NewProj/W200Update/Application/build/tmp/compileJniTestArmeabiDebugSharedLibraryJniTestMainCpp/output.txt.

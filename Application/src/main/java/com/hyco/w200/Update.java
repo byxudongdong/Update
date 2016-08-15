@@ -1,19 +1,23 @@
 package com.hyco.w200;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.AudioTrack;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.Vibrator;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -28,13 +32,28 @@ import android.widget.ToggleButton;
 import com.example.android.bluetoothlegatt.*;
 import com.hyco.w200.R;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Update extends Activity {
+    private SharedPreferences sp;
 
     private long time1 = 0;
     Thread mthread;
@@ -70,6 +89,10 @@ public class Update extends Activity {
         audioMaxVolumn = am.getStreamMaxVolume(AudioTrack_Manager);
         audioCurrentVolumn = am.getStreamVolume(AudioTrack_Manager);
 
+        //获得实例对象
+        sp = this.getSharedPreferences("fileInfo", Context.MODE_WORLD_READABLE);
+        textView.setText( sp.getString("FileName", "不存在升级文件，请先选择升级文件！") );
+
         tv1=(TextView)findViewById(R.id.tv1);
         tv2=(TextView)findViewById(R.id.tv2);
         tb1=(ToggleButton)findViewById(R.id.tb1);
@@ -102,9 +125,9 @@ public class Update extends Activity {
 
     public void versioninfo(View v){
 
-        audioRecord.stop();
-        vibrator.vibrate(new long[]{50,50,50,100,50}, -1);
-        audioRecord.startRecording();
+//        audioRecord.stop();
+//        vibrator.vibrate(new long[]{50,50,50,100,50}, -1);
+//        audioRecord.startRecording();
 
         getHw_version = true;
         mRunnable.run();
@@ -120,7 +143,6 @@ public class Update extends Activity {
             Log.i("版本信息接受完毕", "版本信息接受完毕");
             //vibrator.vibrate(new long[] {800,40,400,30},0);
             sendMessage(30);
-            vibrator.cancel();
 //                    textView.setText(new String(Hw_version[0] ) +"\n"
 //                            +new String(Hw_version[1] ) +"\n");
 //                            +new String(Hw_version[2]) +"\n"
@@ -184,8 +206,9 @@ public class Update extends Activity {
     Boolean AESflag = true;
     public void startButton(View v)
     {
-        Vibrator vibrator=(Vibrator)getSystemService(Service.VIBRATOR_SERVICE);
-        vibrator.vibrate(new long[]{0,1000}, -1);
+//        audioRecord.stop();
+//        vibrator.vibrate(new long[]{50,50,50,100,50}, -1);
+//        audioRecord.startRecording();
 
         //Log.i("生成WAV","生成WAV");
         Log.i("开始转换文件","开始转换文件");
@@ -388,6 +411,7 @@ public class Update extends Activity {
         }
         if (true) {
                 try {
+                    assert fos != null;
                     fos.write(data);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -424,8 +448,6 @@ public class Update extends Activity {
             }
             in.close();
             out.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -462,9 +484,7 @@ public class Update extends Activity {
                     update_step = UPDATE_STEP_WAIT_CRC_RES;
                     break;
                 }
-
                 //Log.w("耗时:", "发送数据前");
-
                 update_sendLen = update_sendImageData();
                 //Log.w("耗时:", "发送数据后");
                 if( update_sendLen < 1 ) {
@@ -477,11 +497,12 @@ public class Update extends Activity {
                 break;
             case UPDATE_STEP_WAIT_REQUEST_RES:
                 consumingTime = System.currentTimeMillis();
-                if ((consumingTime - startTime) >= 2000)
+                if ((consumingTime - startTime) >= 1000)
                 {
 			        /* 超时重发 */
                     Log.i("发送升级请求：", "超时重发");
                     update_step = UPDATE_STEP_SEND_REQUEST;
+                    wavedataFlag = !wavedataFlag;
                 }
                 break;
             case UPDATE_STEP_WAIT_IMAGE_RES:
@@ -538,20 +559,17 @@ public class Update extends Activity {
 
             switch(msg.what){
                 case 0:
-                    update_step = 0;
-                    filedataLen = 0;
-                    //getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                    textView.setText("CRC校验完成，升级成功...");
-                    Toast.makeText(getApplicationContext(), "升级成功！！！", Toast.LENGTH_LONG).show();
+                    if(filedataLen>10) {
+                        textView.setText("CRC校验完成，升级成功...");
+                        Toast.makeText(getApplicationContext(), "升级成功！！！", Toast.LENGTH_LONG).show();
+                    }
                     try {
                         Thread.currentThread().sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-//                    Intent i = getBaseContext().getPackageManager()
-//                            .getLaunchIntentForPackage(getBaseContext().getPackageName());
-//                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    startActivity(i);
+                    update_step = 0;
+                    filedataLen = 0;
                     break;
                 case 3:
                     textView.setText("发送升级数据");
@@ -597,9 +615,10 @@ public class Update extends Activity {
                     textView.setText("数据包发送完成，等待CRC校验结果...");
                     break;
                 case 22:
+                    if(filedataLen>10)
+                        textView.setText("CRC校验完成，升级成功...");
                     update_step = 0;
                     filedataLen = 0;
-                    textView.setText("CRC校验完成，升级成功...");
                     break;
                 case 30:
                     String textinfo = "";
@@ -613,10 +632,40 @@ public class Update extends Activity {
                     break;
                 case 31:
                     break;
+                case 41:
+                    new Thread(runnable,"GetFiles").start();
+                    break;
+                case 42:
+                    if(!list.isEmpty())
+                        showSingleChoiceButton();
+                    break;
+                case 43:
+                    start.setClickable(false);
+                    versioninfo.setClickable(false);
+                    new Thread(httpdownload,"Download").start();
+                    break;
+                case 44:
+                    start.setClickable(true);
+                    versioninfo.setClickable(true);
+                    Toast.makeText(getApplicationContext(), "新升级文件准备就绪！", Toast.LENGTH_LONG).show();
+                    textView.setText( sp.getString("FileName", "不存在升级文件，请先选择升级文件！") );
+                    break;
+                case 45:
+                    Toast.makeText(getApplicationContext(), "请确认网络连接？", Toast.LENGTH_LONG).show();
+                    break;
                 default:
                     break;
 
             }
+        }
+    };
+
+    Runnable runnable=new Runnable() {
+        @Override
+        public void run() {
+            loads();
+            Looper.prepare();
+            sendMessage(42);
         }
     };
 
@@ -630,7 +679,7 @@ public class Update extends Activity {
 
     byte	COMM_CMD_TYPE_UPDATE		=(byte)	(0xD0);	//软件升级
     byte	COMM_CMD_TYPE_VOICE		=(byte)	(0xD1);	//语音数据传输
-    byte	COMM_CMD_TYPE_DONGLE_SN	=(byte)	(0xD2);	//dongle序列号z
+    byte	COMM_CMD_TYPE_DONGLE_SN	=(byte)	(0xD2);	//dongle序列号
     byte	COMM_CMD_TYPE_TOUCH		=	(byte)0xDF;	//touch数据
     byte	COMM_CMD_TYPE_VERSION		=	(byte)(0xE0);	//R11版本信息
 
@@ -1105,9 +1154,15 @@ public class Update extends Activity {
     /**
      * 播放指令数据
      */
+    Boolean wavedataFlag =true;
     public void start_scan(byte[] byte_damo) {
+        Log.w("打印wavedataFlag当前值",String.valueOf(wavedataFlag) );
         try {
-            trackplayer.write(byte_damo, 0, 42000*2);// 往track中写数据
+            if(wavedataFlag) {
+                trackplayer.write(byte_damo, 0, 42000 * 2);// 往track中写数据
+            }else {
+                trackplayer.write(byte_damo, 1, 42000 * 2-1);// 往track中写数据
+            }
         } catch (Exception e) {
             PlayAudioThread.interrupt();
         }
@@ -1357,7 +1412,7 @@ public class Update extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//Toast.makeText(context,"揚聲器已經關閉",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context,"揚聲器已經關閉",Toast.LENGTH_SHORT).show();
     }
 
     private long exitTime = 0;
@@ -1375,5 +1430,198 @@ public class Update extends Activity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+
+    Boolean menufiles =false;
+    public void newfiles(View v)
+    {
+        if(!menufiles) {
+            sendMessage(41);
+            menufiles = true;
+        }
+    }
+
+    private String[] province = new String[] { "上海", "北京", "海南" };
+    // 单击事件对象的实例
+    private ButtonOnClick buttonOnClick = new ButtonOnClick(1);
+    // 在单选选项中显示 确定和取消按钮
+    //buttonOnClickg变量的数据类型是ButtonOnClick,一个单击事件类
+    private void showSingleChoiceButton()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("请选择升级文件版本");
+        builder.setSingleChoiceItems(province, -1, buttonOnClick);
+        builder.setPositiveButton("确定", buttonOnClick);
+        builder.setNegativeButton("取消", buttonOnClick);
+        builder.show();
+    }
+
+    public int index; // 表示选项的索引
+    private class ButtonOnClick implements DialogInterface.OnClickListener
+    {
+
+        public ButtonOnClick(int listindex)
+        {
+            index = listindex;
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which)
+        {
+            // which表示单击的按钮索引，所有的选项索引都是大于0，按钮索引都是小于0的。
+            if (which >= 0)
+            {
+                //如果单击的是列表项，将当前列表项的索引保存在index中。
+                //如果想单击列表项后关闭对话框，可在此处调用dialog.cancel()
+                //或是用dialog.dismiss()方法。
+                index = which;
+            }
+            else
+            {
+                //用户单击的是【确定】按钮
+                if (which == DialogInterface.BUTTON_POSITIVE)
+                {
+                    //显示用户选择的是第几个列表项。
+                    Log.w("选择的文件是：",province[index]);
+                    final AlertDialog ad = new AlertDialog.Builder(
+                            Update.this).setMessage(
+                            "你选择的文件是：" + index + ":" + province[index]).show();
+                    sendMessage(43);
+                    //五秒钟后自动关闭。
+                    Handler hander = new Handler();
+                    Runnable runnable = new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            ad.dismiss();
+                        }
+                    };
+                    hander.postDelayed(runnable, 2 * 1000);
+                    //TODO
+//                    downloadfile(province[index] );
+                }
+                //用户单击的是【取消】按钮
+                else if (which == DialogInterface.BUTTON_NEGATIVE)
+                {
+                    Toast.makeText(Update.this, "你没有选择任何文件！",
+                            Toast.LENGTH_LONG).show();
+                }
+                menufiles =false;
+            }
+        }
+    }
+
+    Document doc;
+    String Url = "http://hycosoft.cc/w200.json";
+    List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+
+    protected void loads() {
+        String getdata = HttpUser.getJsonContent(Url);  //请求数据地址
+        if(getdata == ""){
+            sendMessage(45);
+            return;
+        }
+        //JSON对象 转 JSONModel对象
+        Root result = JavaBean.getPerson(getdata, Root.class);
+        list.clear();
+        for (int i=0;i<result.getKey().size();i++) {{
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("Name", result.getKey().get(i).getName());
+            map.put("Url", result.getKey().get(i).getUrl() );
+            list.add(map);
+        }
+        }
+        province = new String[result.getKey().size()];
+        for(int j=0;j<result.getKey().size();j++)
+        {
+            province[j] = list.get(j).get("Name");
+        }
+
+    }
+
+
+    Runnable httpdownload =new Runnable() {
+        @Override
+        public void run() {
+            downloadfile( list.get(index).get("Url"));
+            Looper.prepare();
+        }
+    };
+    /**
+     *
+     * @Project: Android_MyDownload
+     * @Desciption: 读取任意文件，并将文件保存到手机SDCard
+     * @Author: LinYiSong
+     * @Date: 2011-3-25~2011-3-25
+     */
+    public void downloadfile(String  urlStr)
+    {
+        String path="Downloads";
+        String fileName="image_W200.hyc";
+        OutputStream output=null;
+        try {
+                /*
+                 * 通过URL取得HttpURLConnection
+                 * 要网络连接成功，需在AndroidMainfest.xml中进行权限配置
+                 * <uses-permission android:name="android.permission.INTERNET" />
+                 */
+            //urlStr = null;
+            URL url=new URL( urlStr);
+            HttpURLConnection conn=(HttpURLConnection)url.openConnection();
+            //获得文件的长度
+            int contentLength = conn.getContentLength();
+            System.out.println("长度 :"+contentLength);
+
+            //取得inputStream，并将流中的信息写入SDCard
+            //String SDCard= Environment.getExternalStorageDirectory()+"";
+            String SDCard= Environment.getExternalStorageDirectory()+"";
+            String pathName=SDCard+"/"+path+"/"+fileName;//文件存储路径
+
+            File file=new File(pathName);
+            InputStream input=conn.getInputStream();
+            if(file.exists()){
+                System.out.println("exits");
+                file.delete();
+            }else{
+                String dir=SDCard+"/"+path;
+                new File(dir).mkdir();//新建文件夹
+                file.createNewFile();//新建文件
+                output=new FileOutputStream(file);
+                //读取大文件
+                byte[] buffer=new byte[1024];
+                //Log.w("文件请求大小",String.valueOf(input.available()));
+                int len;            //重要参数
+                while( (len = input.read(buffer))!=-1 ){
+                    output.write(buffer,0,len);
+                }
+                output.flush();
+                input.close();
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally{
+            try {
+                if(output != null) {
+                    output.close();
+                    System.out.println("success");
+
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString("FileName", province[index]);
+                    editor.commit();
+
+                    sendMessage(44);
+                }else {
+                    System.out.println("fail");
+                    sendMessage(43);
+                }
+            } catch (IOException e) {
+                System.out.println("fail");
+                e.printStackTrace();
+            }
+        }
     }
 }
