@@ -631,7 +631,7 @@ public class Update extends Activity {
                     String textinfo = "";
                     for(int k = Hw_dataindex;k<6;k++)
                     {
-                        textinfo = textinfo + new String(Hw_version[k] ) +"\n";
+                        textinfo = textinfo + new String(Hw_version1[k] ) +"\n";
                     }
                     textView.setText(textinfo);
 
@@ -828,6 +828,7 @@ public class Update extends Activity {
 
     Boolean getHw_version = false;
     byte[][] Hw_version = new byte[6][64];
+    byte[][] Hw_version1 = new byte[6][64];
     int HW_index = 0;
     int Hw_dataindex = 6;
     public int DecodeData(byte[] decodedata,byte datatype)
@@ -847,7 +848,7 @@ public class Update extends Activity {
             HW_index = HW_index + data.length;
             if( data[data.length -1] == 0x2A)
             {
-                System.arraycopy(Hw_version[Hw_dataindex-1], 4, Hw_version[Hw_dataindex-1], 0,HW_index-7);
+                System.arraycopy(Hw_version[Hw_dataindex-1], 4, Hw_version1[Hw_dataindex-1], 0,HW_index-6);
                 HW_index = 0;
                 Hw_dataindex --;
 //                if(Hw_dataindex <=0)
