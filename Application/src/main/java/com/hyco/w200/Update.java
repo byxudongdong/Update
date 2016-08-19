@@ -107,7 +107,7 @@ public class Update extends Activity {
         myLayout.removeView(zheng2);
 
         vibrator=(Vibrator) getApplication().getSystemService(Service.VIBRATOR_SERVICE);
-
+        Recordflag =true;
         start_play();
         startRecord();      //录音和震动冲突
 
@@ -123,12 +123,19 @@ public class Update extends Activity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Recordflag = false;
+        Log.e("停止解码","停止解码");
+    }
+
     public void versioninfo(View v){
 
 //        audioRecord.stop();
 //        vibrator.vibrate(new long[]{50,50,50,100,50}, -1);
 //        audioRecord.startRecording();
-
+        wavedataFlag = !wavedataFlag;
         getHw_version = true;
         mRunnable.run();
         try {
@@ -197,7 +204,7 @@ public class Update extends Activity {
         Log.i("记录波形","记录波形");
     }
 
-    String filesname = "/Downloads/image_W200.hyc";
+    String filesname = "/Downloads/image_W200.hyco";
     final int UPDATE_REQUEST_ID_hyco		=	(int)(0xFFFD);
     final int UPDATE_CRC_RESP_ID_hyco		=	(int)(0xFFFC);
 
@@ -497,7 +504,7 @@ public class Update extends Activity {
                 break;
             case UPDATE_STEP_WAIT_REQUEST_RES:
                 consumingTime = System.currentTimeMillis();
-                if ((consumingTime - startTime) >= 1000)
+                if ((consumingTime - startTime) >= 1500)
                 {
 			        /* 超时重发 */
                     Log.i("发送升级请求：", "超时重发");
@@ -1154,14 +1161,20 @@ public class Update extends Activity {
     /**
      * 播放指令数据
      */
-    Boolean wavedataFlag =true;
+    Boolean wavedataFlag =false;
+    BytesTransUtil bytesTransUtil = new BytesTransUtil();
     public void start_scan(byte[] byte_damo) {
+        short[] newshortdata;
+        byte[] newbytedata = new byte[byte_damo.length];
         Log.w("打印wavedataFlag当前值",String.valueOf(wavedataFlag) );
         try {
             if(wavedataFlag) {
-                trackplayer.write(byte_damo, 0, 42000 * 2);// 往track中写数据
+                newshortdata = bytesTransUtil.Bytes2Shorts(byte_damo);
+                trackplayer.write(newshortdata, 0, 42000 );// 往track中写数据
             }else {
-                trackplayer.write(byte_damo, 1, 42000 * 2-1);// 往track中写数据
+                System.arraycopy(byte_damo,1,newbytedata,0,byte_damo.length-1);
+                newshortdata = bytesTransUtil.Bytes2Shorts(byte_damo);
+                trackplayer.write(newshortdata, 1, 42000 -1);// 往track中写数据
             }
         } catch (Exception e) {
             PlayAudioThread.interrupt();
@@ -1191,7 +1204,7 @@ public class Update extends Activity {
      */
     public void createAudioRecord() {
         recBufSize = AudioRecord.getMinBufferSize(frequency,
-                channelConfiguration, EncodingBitRate)/2;
+                channelConfiguration, EncodingBitRate);
         audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, frequency,
                 channelConfiguration, EncodingBitRate, recBufSize);
         System.out.println("AudioRecord成功");
@@ -1201,10 +1214,11 @@ public class Update extends Activity {
      * 录音数据解析
      */
     Boolean isRecord =false;
+    Boolean Recordflag =true;
     private void writeAudioDataToFile() {
         byte data[] = new byte[recBufSize];
         int read = 0;
-        while (true) {
+        while (Recordflag) {
 
             //time1 = System.currentTimeMillis();  //開始時間
             read = audioRecord.read(data, 0, recBufSize);
@@ -1454,6 +1468,7 @@ public class Update extends Activity {
         builder.setSingleChoiceItems(province, -1, buttonOnClick);
         builder.setPositiveButton("确定", buttonOnClick);
         builder.setNegativeButton("取消", buttonOnClick);
+        builder.setCancelable(false);
         builder.show();
     }
 
@@ -1507,6 +1522,7 @@ public class Update extends Activity {
                 {
                     Toast.makeText(Update.this, "你没有选择任何文件！",
                             Toast.LENGTH_LONG).show();
+
                 }
                 menufiles =false;
             }

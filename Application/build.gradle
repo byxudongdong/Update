@@ -12,7 +12,7 @@ model {
         }
         ndk {
             platformVersion = 23
-            moduleName = 'JniTest'
+            moduleName = 'W200code'
             toolchain = 'clang'
             stl "stlport_static"
             CFlags.add('-std=c99')

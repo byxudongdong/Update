@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class MyNative {
     static {
-        System.loadLibrary("JniTest");
+        System.loadLibrary("W200code");
     }
 
     //jni 直接访问变量
