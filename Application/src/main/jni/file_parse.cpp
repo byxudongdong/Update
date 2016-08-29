@@ -56,7 +56,7 @@ tR11_UPDATEFILE_HEADER *pHeader_final;
 JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_update_1fileParse
 		(JNIEnv *env, jobject, jbyteArray file_name) {
 
-	char *fileName = (char *) env->GetByteArrayElements(file_name, 0);
+	char *fileName = (char *) env->GetByteArrayElements(file_name,0 );
 
 	FILE *fp;
 	char buf[1024], *buf_temp, tempBuf[100];
@@ -70,6 +70,10 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_update_
 	U8 headerBuf[1024];
 
 	fp = fopen(fileName, "rb");
+	for (int i = 0; i < 32; i++)
+	{
+		LOGI("string %X", headerBuf[i], 1024);//去字符串s%
+	}
 	if (fp == NULL) {
 		/* 文件打开错误 */
 		LOGI("文件打开错误");

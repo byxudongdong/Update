@@ -6,6 +6,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.AudioFormat;
 import android.media.AudioManager;
@@ -44,6 +45,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -54,7 +56,7 @@ import java.util.Map;
 
 public class Update extends Activity {
     private SharedPreferences sp;
-
+    HeadsetPlugReceiver headsetPlugReceiver;
     private long time1 = 0;
     Thread mthread;
     private TextView mDataField;
@@ -73,6 +75,18 @@ public class Update extends Activity {
     private Vibrator vibrator = null;
     private ToggleButton tb1=null, tb2=null;
     private TextView tv1=null, tv2=null;
+
+    private void registerHeadsetPlugReceiver(){
+        headsetPlugReceiver  = new HeadsetPlugReceiver ();
+        IntentFilter  filter = new IntentFilter();
+        filter.addAction("android.intent.action.HEADSET_PLUG");
+        registerReceiver(headsetPlugReceiver, filter);
+    }
+
+    private void unregisterReceiver(){
+        this.unregisterReceiver(headsetPlugReceiver);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +103,7 @@ public class Update extends Activity {
         audioMaxVolumn = am.getStreamMaxVolume(AudioTrack_Manager);
         audioCurrentVolumn = am.getStreamVolume(AudioTrack_Manager);
 
+        registerHeadsetPlugReceiver();
         //获得实例对象
         sp = this.getSharedPreferences("fileInfo", Context.MODE_WORLD_READABLE);
         textView.setText( sp.getString("FileName", "不存在升级文件，请先选择升级文件！") );
@@ -127,6 +142,7 @@ public class Update extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         Recordflag = false;
+        unregisterReceiver();  //注销监听
         Log.e("停止解码","停止解码");
     }
 
@@ -204,13 +220,21 @@ public class Update extends Activity {
         Log.i("记录波形","记录波形");
     }
 
-    String filesname = "/Downloads/image_W200.hyco";
+    String filesname = "/Downloads/imagew22.hyc";
+    String filesname1 = "/Downloads/imagew22.hyco";
     final int UPDATE_REQUEST_ID_hyco		=	(int)(0xFFFD);
     final int UPDATE_CRC_RESP_ID_hyco		=	(int)(0xFFFC);
 
     final int UPDATE_REQUEST_ID_hyc		=	(int)(0xFFFF);
     final int UPDATE_CRC_RESP_ID_hyc		=	(int)(0xFFFE);
     Boolean AESflag = true;
+    int singleSelectedId = 0;
+    String filePath0 = FilesOpt.getSdCardPath() + filesname;
+    String filePath1 = FilesOpt.getSdCardPath() + filesname1;
+    File file=new File(filePath0);
+    File file1=new File(filePath1);
+    String[] items = new String[] { "正式版本", "测试版本" };
+    String filePath = "";
     public void startButton(View v)
     {
 //        audioRecord.stop();
@@ -219,10 +243,68 @@ public class Update extends Activity {
 
         //Log.i("生成WAV","生成WAV");
         Log.i("开始转换文件","开始转换文件");
+
+        if(file.exists() && file1.exists())
+        {
+            singleSelectedId = 0;
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setIcon(R.drawable.ic_launcher);
+            builder.setTitle("升级文件类型");
+            builder.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+                    singleSelectedId = which;
+                    Toast.makeText(Update.this, "你选择的文件类型为："+which, Toast.LENGTH_SHORT).show();
+                }
+            });
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+                    if (singleSelectedId >= 0) {
+                        Toast.makeText(Update.this, "你选择的文件类型为："+singleSelectedId, Toast.LENGTH_SHORT).show();
+                        if (singleSelectedId == 0) {
+                            filePath = filePath0;
+                        }else {
+                            filePath = filePath1;
+                        }
+                    } else {
+                        singleSelectedId = 0;
+                        filePath = filePath0;
+                        // 业务逻辑
+                    }
+                    readFiles();
+
+                }
+            });
+            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+
+                }
+            });
+            builder.create().show();
+        }else if(file.exists() && !file1.exists()){
+            filePath = filePath0;
+            readFiles();
+        }else if(!file.exists() && file1.exists()){
+            filePath = filePath1;
+            readFiles();
+        }
+
+
+    }
+
+    byte[] newfilepath;
+    public void readFiles(){
         //读SD中的文件
         try{
             //String filePath = FilesOpt.getSdCardPath() + "/image_w200_20160726.hyc";
-            String filePath = FilesOpt.getSdCardPath() + filesname;
+
             if(filePath.contains(".hyco"))
             {
                 AESflag = false;
@@ -234,9 +316,9 @@ public class Update extends Activity {
 //                UPDATE_REQUEST_ID	 =	(int)	(0xFFFF);
 //                UPDATE_CRC_RESP_ID 	=(int) (0xFFFE);
             }
-
+            newfilepath = filePath.getBytes();
             try {
-                imageNum = myNative.update_fileParse(filePath.getBytes());
+                imageNum = myNative.update_fileParse(newfilepath);
             }catch (Exception  e) {
                 Log.i("升级文件不存在：", "请放入升级文件");
                 sendMessage(6);
@@ -276,12 +358,10 @@ public class Update extends Activity {
         versioninfo.setClickable(false);
 
         myNative.update_checkSetFlag(0);
-        //int ret = update_fileParse(fileName);
 
         updateFlag = true;
         mthread = new Thread(sendData, "Update");
         mthread.start();
-
     }
 
     String newtime;
@@ -299,13 +379,12 @@ public class Update extends Activity {
         {
             //读SD中的文件
             try{
-                String filePath = filesOpt.getSdCardPath() + filesname;
-                try {
-                    imageNum = myNative.update_fileParse(filePath.getBytes());
-                }catch (Exception  e) {
-                    Log.i("升级文件不存在：", "请放入升级文件");
-                    sendMessage(6);
-                }
+//                try {
+//                    imageNum = myNative.update_fileParse(filePath.getBytes());
+//                }catch (Exception  e) {
+//                    Log.i("升级文件不存在：", "请放入升级文件");
+//                    sendMessage(6);
+//                }
 
                 Log.i("升级文件个数",String.valueOf(imageNum));
 
@@ -319,7 +398,7 @@ public class Update extends Activity {
             byte[] bytes = {0x11,0x40, 0x02, 0x53,(byte)0xEE, 0x43, 0x2A};        //写入发送数据
 
             if(imageNum <1) {
-                //sendMessage(6);
+                sendMessage(6);
                 Log.i("没有升级文件：", "没有升级文件");
                 updateFlag = false;
             }
@@ -335,9 +414,9 @@ public class Update extends Activity {
                     //发送唤醒
                     if (update_step == 0) {
                         Log.i("唤醒设备：", "wait...");
-                        WriteComm( bytes, bytes.length);
+                        //WriteComm( bytes, bytes.length);
                         try {
-                            Thread.sleep(100);
+                            Thread.sleep(10);
                         } catch (InterruptedException e) {
                             Log.i("等待延时：", "wait...");
                         }
@@ -387,7 +466,9 @@ public class Update extends Activity {
 //        copyWaveFile(AudioName, NewAudioName);//给裸数据加上头文件
 //        Log.i("生成WAV","生成WAV");
 //        long time1 = System.currentTimeMillis();  //開始時間
-        start_scan(wavedata);
+        if(HeadsetPlugReceiver.headsetState) {
+            start_scan(wavedata);
+        }
 //        time1 = System.currentTimeMillis() - time1;
 //        Log.w("耗时:",String.valueOf(time1));
         return 0;
@@ -520,7 +601,7 @@ public class Update extends Activity {
 //                    e.printStackTrace();
 //                }
                 consumingTime = System.currentTimeMillis();
-                if ((consumingTime - startTime) >= 400)
+                if ((consumingTime - startTime) >= 450)
                 {
 			        /* 超时重发 */
                     Log.i("发送升级文件：", "超时重发");
@@ -821,6 +902,7 @@ public class Update extends Activity {
         byte[] temp1 = new byte[ len+7];
         temp1[0] = 0x11;
         System.arraycopy(temp,0,temp1,1,len+6);
+        PrintLog.printHexString("当前数据",temp1);
         WriteComm( temp1, len+7);
 
         return true;
@@ -1576,7 +1658,7 @@ public class Update extends Activity {
     public void downloadfile(String  urlStr)
     {
         String path="Downloads";
-        String fileName="image_W200.hyc";
+        String fileName="imagew22.hyc";
         OutputStream output=null;
         try {
                 /*
@@ -1593,7 +1675,7 @@ public class Update extends Activity {
 
             //取得inputStream，并将流中的信息写入SDCard
             //String SDCard= Environment.getExternalStorageDirectory()+"";
-            String SDCard= Environment.getExternalStorageDirectory()+"";
+            String SDCard= Environment.getExternalStorageDirectory().toString();
             String pathName=SDCard+"/"+path+"/"+fileName;//文件存储路径
 
             File file=new File(pathName);
