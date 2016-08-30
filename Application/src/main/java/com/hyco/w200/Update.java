@@ -220,8 +220,6 @@ public class Update extends Activity {
         Log.i("记录波形","记录波形");
     }
 
-    String filesname = "/Downloads/imagew22.hyc";
-    String filesname1 = "/Downloads/imagew22.hyco";
     final int UPDATE_REQUEST_ID_hyco		=	(int)(0xFFFD);
     final int UPDATE_CRC_RESP_ID_hyco		=	(int)(0xFFFC);
 
@@ -229,6 +227,8 @@ public class Update extends Activity {
     final int UPDATE_CRC_RESP_ID_hyc		=	(int)(0xFFFE);
     Boolean AESflag = true;
     int singleSelectedId = 0;
+    String filesname = "/Downloads/image W200.hyc";
+    String filesname1 = "/Downloads/image_W200.hyco";
     String filePath0 = FilesOpt.getSdCardPath() + filesname;
     String filePath1 = FilesOpt.getSdCardPath() + filesname1;
     File file=new File(filePath0);
@@ -294,6 +294,8 @@ public class Update extends Activity {
         }else if(!file.exists() && file1.exists()){
             filePath = filePath1;
             readFiles();
+        }else if(!file.exists() && !file1.exists()){
+            sendMessage(1);
         }
 
 
@@ -318,9 +320,15 @@ public class Update extends Activity {
             }
             newfilepath = filePath.getBytes();
             try {
-                imageNum = myNative.update_fileParse(newfilepath);
+                for(int j=9;j>0;j--) {
+                    imageNum = myNative.update_fileParse(newfilepath);
+                    if(imageNum>0){
+                        Log.w("读取次数：", String.valueOf(j));
+                        break;
+                    }
+                }
             }catch (Exception  e) {
-                Log.i("升级文件不存在：", "请放入升级文件");
+                Log.i("升级文件不存在：", "Jni解析异常!");
                 sendMessage(6);
             }
 
@@ -658,6 +666,9 @@ public class Update extends Activity {
                     }
                     update_step = 0;
                     filedataLen = 0;
+                    break;
+                case 1:
+                    Toast.makeText(getApplicationContext(), "请下载升级文件！！！", Toast.LENGTH_LONG).show();
                     break;
                 case 3:
                     textView.setText("发送升级数据");
@@ -1658,10 +1669,10 @@ public class Update extends Activity {
     public void downloadfile(String  urlStr)
     {
         String path="Downloads";
-        String fileName="imagew22.hyc";
+        String fileName="image_w200.hyc";
         OutputStream output=null;
         try {
-                /*
+                /**
                  * 通过URL取得HttpURLConnection
                  * 要网络连接成功，需在AndroidMainfest.xml中进行权限配置
                  * <uses-permission android:name="android.permission.INTERNET" />
@@ -1676,8 +1687,8 @@ public class Update extends Activity {
             //取得inputStream，并将流中的信息写入SDCard
             //String SDCard= Environment.getExternalStorageDirectory()+"";
             String SDCard= Environment.getExternalStorageDirectory().toString();
-            String pathName=SDCard+"/"+path+"/"+fileName;//文件存储路径
-
+            //String pathName=SDCard+"/"+path+"/"+fileName;//文件存储路径
+            String pathName = filePath0;
             File file=new File(pathName);
             InputStream input=conn.getInputStream();
             if(file.exists()){

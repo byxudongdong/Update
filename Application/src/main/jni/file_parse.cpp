@@ -70,10 +70,10 @@ JNIEXPORT jint JNICALL Java_com_example_android_bluetoothlegatt_MyNative_update_
 	U8 headerBuf[1024];
 
 	fp = fopen(fileName, "rb");
-	for (int i = 0; i < 32; i++)
-	{
-		LOGI("string %X", headerBuf[i], 1024);//去字符串s%
-	}
+//	for (int i = 0; i < 32; i++)
+//	{
+//		LOGI("string %X", headerBuf[i], 1024);//去字符串s%
+//	}
 	if (fp == NULL) {
 		/* 文件打开错误 */
 		LOGI("文件打开错误");
