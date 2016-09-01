@@ -49,6 +49,7 @@
             android:layout_gravity="center_horizontal"
             android:id="@+id/startButton"
             android:layout_width="150dp"
+            android:background="@drawable/draw_button"
             android:onClick="startButton"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -57,7 +58,8 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="查看版本信息"
+            android:text="  查看版本信息  "
+            android:background="@drawable/draw_button"
             android:layout_marginTop="15dp"
             android:id="@+id/versioninfo"
             android:onClick="versioninfo"
@@ -66,7 +68,8 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="下载升级文件"
+            android:text="  下载升级文件  "
+            android:background="@drawable/draw_button"
             android:layout_marginTop="15dp"
             android:id="@+id/newfiles"
             android:onClick="newfiles"

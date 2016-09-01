@@ -26,6 +26,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -227,7 +228,7 @@ public class Update extends Activity {
     final int UPDATE_CRC_RESP_ID_hyc		=	(int)(0xFFFE);
     Boolean AESflag = true;
     int singleSelectedId = 0;
-    String filesname = "/Downloads/image W200.hyc";
+    String filesname = "/Downloads/image_W200.hyc";
     String filesname1 = "/Downloads/image_W200.hyco";
     String filePath0 = FilesOpt.getSdCardPath() + filesname;
     String filePath1 = FilesOpt.getSdCardPath() + filesname1;
@@ -295,7 +296,7 @@ public class Update extends Activity {
             filePath = filePath1;
             readFiles();
         }else if(!file.exists() && !file1.exists()){
-            sendMessage(1);
+            sendMessage(55);
         }
 
 
@@ -556,7 +557,7 @@ public class Update extends Activity {
             case UPDATE_STEP_SEND_REQUEST:
                 //发送升级请求
                 Log.i("发送升级请求：", "发送升级请求");
-                sendMessage( 2 );
+                sendMessage(2);
                 receiveDataFlag = false;
                 //while(!receiveDataFlag)
                 {
@@ -574,7 +575,7 @@ public class Update extends Activity {
             case UPDATE_STEP_SEND_IMAGE:
                 Log.i("发送升级文件：", "发送升级文件"+String.valueOf(update_sendSize)
                         + ":"+String.valueOf(filedataLen) );
-                sendMessage( 3 );
+                sendMessage(3);
                 /* 发送升级数据 */
                 if( update_sendSize >= filedataLen && filedataLen>100) {
                     update_step = UPDATE_STEP_WAIT_CRC_RES;
@@ -593,12 +594,13 @@ public class Update extends Activity {
                 break;
             case UPDATE_STEP_WAIT_REQUEST_RES:
                 consumingTime = System.currentTimeMillis();
-                if ((consumingTime - startTime) >= 1500)
+                if ((consumingTime - startTime) >= 800)
                 {
 			        /* 超时重发 */
                     Log.i("发送升级请求：", "超时重发");
                     update_step = UPDATE_STEP_SEND_REQUEST;
                     wavedataFlag = !wavedataFlag;
+                    am.setStreamVolume(AudioTrack_Manager,audioMaxVolumn *3 / 5,0);
                 }
                 break;
             case UPDATE_STEP_WAIT_IMAGE_RES:
@@ -667,7 +669,7 @@ public class Update extends Activity {
                     update_step = 0;
                     filedataLen = 0;
                     break;
-                case 1:
+                case 55:
                     Toast.makeText(getApplicationContext(), "请下载升级文件！！！", Toast.LENGTH_LONG).show();
                     break;
                 case 3:
@@ -930,7 +932,6 @@ public class Update extends Activity {
         receiveDataFlag = true;
         //PrintLog.printHexString("接收到data*****************", data);
         //displayData(PrintLog.returnHexString(data));
-        //sendMessage(1);
         if(getHw_version && data != null)
         {
             if(data[0]  == 0x40)
@@ -1227,7 +1228,7 @@ public class Update extends Activity {
     }
 
     AudioManager am;
-    private int AudioTrack_Manager = AudioManager.STREAM_SYSTEM;
+    private int AudioTrack_Manager = AudioManager.STREAM_MUSIC;
     private Thread PlayAudioThread = null;// 播放音频线程
     private AudioTrack trackplayer;
     public void start_play() {
@@ -1734,4 +1735,5 @@ public class Update extends Activity {
             }
         }
     }
+
 }
